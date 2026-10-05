@@ -1,0 +1,73 @@
+<script>
+        // Начальные данные
+        let data = {
+            level: 1,
+            xp: 0,
+            xpMax: 100,
+            str: 0,
+            int: 0,
+            clean: 0,
+            energy: 100
+        };
+
+        // Загрузка сохранения из Telegram (если есть)
+        function loadData() {
+            if (window.Telegram && Telegram.WebApp) {
+                Telegram.WebApp.ready();
+                const saved = Telegram.WebApp.CloudStorage.getItem('rpgData');
+                if (saved) data = JSON.parse(saved);
+            }
+            updateUI();
+        }
+
+        // Сохранение (работает в Telegram)
+        function saveData() {
+            if (window.Telegram && Telegram.WebApp) {
+                Telegram.WebApp.CloudStorage.setItem('rpgData', JSON.stringify(data));
+            }
+        }
+
+        function doAction(type) {
+            if (type === 'sport') {
+                if (data.energy < 20) return alert("Мало энергии! Отдохни 😴");
+                data.str += 10; data.xp += 20; data.energy -= 20;
+            }
+            if (type === 'study') {
+                data.int += 10; data.xp += 25;
+            }
+            if (type === 'clean') {
+                data.clean += 10; data.xp += 15;
+            }
+            if (type === 'rest') {
+                data.energy = Math.min(100, data.energy + 20);
+            }
+
+            // Проверка на новый уровень
+            if (data.xp >= data.xpMax) {
+                data.level++;
+                data.xp -= data.xpMax;
+                data.xpMax = Math.floor(data.xpMax * 1.5);
+                alert("🎉 Новый уровень! Теперь ты " + data.level + " уровня!");
+            }
+
+            updateUI();
+            saveData();
+        }
+
+        function updateUI() {
+            document.getElementById('lvl').innerText = data.level;
+            document.getElementById('xp').innerText = data.xp;
+            document.getElementById('xpMax').innerText = data.xpMax;
+            document.getElementById('str').innerText = data.str;
+            document.getElementById('int').innerText = data.int;
+            document.getElementById('clean').innerText = data.clean;
+            document.getElementById('energy').innerText = data.energy;
+            const percent = (data.xp / data.xpMax) * 100;
+            document.getElementById('xpFill').style.width = percent + '%';
+        }
+
+        loadData();
+    </script>
+
+</body>
+</html>
