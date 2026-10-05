@@ -1,4 +1,123 @@
-<script>
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RPG Жизнь</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #1a1a2e;
+            color: #eee;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            user-select: none;
+        }
+        h1 { color: #e94560; margin: 10px 0; }
+        .level-box {
+            background: #16213e;
+            border: 2px solid #0f3460;
+            border-radius: 12px;
+            padding: 15px;
+            width: 100%;
+            max-width: 350px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .level { font-size: 22px; color: #e94560; font-weight: bold; }
+        .xp-bar {
+            width: 100%;
+            height: 20px;
+            background: #0f3460;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+        .xp-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #e94560, #f39c12);
+            width: 0%;
+            transition: width 0.3s;
+        }
+        .stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            width: 100%;
+            max-width: 350px;
+            margin-bottom: 20px;
+        }
+        .stat {
+            background: #16213e;
+            border-radius: 10px;
+            padding: 10px;
+            text-align: center;
+        }
+        .stat-name { font-size: 12px; color: #888; }
+        .stat-value { font-size: 20px; font-weight: bold; color: #0f9; }
+        .actions {
+            width: 100%;
+            max-width: 350px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .action-btn {
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+            transition: transform 0.1s;
+            text-align: left;
+            display: flex;
+            justify-content: space-between;
+        }
+        .action-btn:active { transform: scale(0.97); }
+        .btn-sport { background: #e94560; }
+        .btn-study { background: #0f3460; }
+        .btn-clean { background: #533483; }
+        .btn-sleep { background: #16a085; }
+    </style>
+</head>
+<body>
+
+    <h1>⚔️ RPG Жизнь</h1>
+
+    <div class="level-box">
+        <div class="level">Уровень <span id="lvl">1</span></div>
+        <div>Опыт: <span id="xp">0</span> / <span id="xpMax">100</span></div>
+        <div class="xp-bar"><div class="xp-fill" id="xpFill"></div></div>
+    </div>
+
+    <div class="stats">
+        <div class="stat"><div class="stat-name">💪 Сила</div><div class="stat-value" id="str">0</div></div>
+        <div class="stat"><div class="stat-name">🧠 Интеллект</div><div class="stat-value" id="int">0</div></div>
+        <div class="stat"><div class="stat-name">🧹 Порядок</div><div class="stat-value" id="clean">0</div></div>
+        <div class="stat"><div class="stat-name">⚡ Энергия</div><div class="stat-value" id="energy">100</div></div>
+    </div>
+
+    <div class="actions">
+        <button class="action-btn btn-sport" onclick="doAction('sport')">
+            <span>🏋️ Зарядка</span> <span>+10 силы, +20 XP</span>
+        </button>
+        <button class="action-btn btn-study" onclick="doAction('study')">
+            <span>📚 Учёба</span> <span>+10 интеллекта, +25 XP</span>
+        </button>
+        <button class="action-btn btn-clean" onclick="doAction('clean')">
+            <span>🧹 Уборка</span> <span>+10 порядка, +15 XP</span>
+        </button>
+        <button class="action-btn btn-sleep" onclick="doAction('rest')">
+            <span>😴 Отдых</span> <span>+20 энергии</span>
+        </button>
+    </div>
+    <script>
         // Начальные данные
         let data = {
             level: 1,
