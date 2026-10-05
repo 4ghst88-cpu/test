@@ -84,6 +84,16 @@
         .btn-study { background: #0f3460; }
         .btn-clean { background: #533483; }
         .btn-sleep { background: #16a085; }
+        .reset-btn {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background: transparent;
+            border: 1px solid #555;
+            color: #888;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+        }
     </style>
 </head>
 <body>
@@ -106,7 +116,7 @@
     <div class="actions">
         <button class="action-btn btn-sport" onclick="doAction('sport')">
             <span>🏋️ Зарядка</span> <span>+10 силы, +20 XP</span>
-        </button>
+            </button>
         <button class="action-btn btn-study" onclick="doAction('study')">
             <span>📚 Учёба</span> <span>+10 интеллекта, +25 XP</span>
         </button>
@@ -117,8 +127,10 @@
             <span>😴 Отдых</span> <span>+20 энергии</span>
         </button>
     </div>
+
+    <button class="reset-btn" onclick="resetGame()">Сбросить прогресс</button>
+
     <script>
-        // Начальные данные
         let data = {
             level: 1,
             xp: 0,
@@ -129,20 +141,35 @@
             energy: 100
         };
 
-        // Загрузка сохранения из Telegram (если есть)
+        // Загрузка: сначала localStorage (для браузера), потом Telegram CloudStorage
         function loadData() {
+            // 1. Пробуем localStorage
+            const local = localStorage.getItem('rpgData');
+            if (local) {
+                data = JSON.parse(local);
+            }
+
+            // 2. Если есть Telegram — подключаемся и пробуем облако
             if (window.Telegram && Telegram.WebApp) {
                 Telegram.WebApp.ready();
-                const saved = Telegram.WebApp.CloudStorage.getItem('rpgData');
-                if (saved) data = JSON.parse(saved);
+                Telegram.WebApp.CloudStorage.getItem('rpgData', (err, value) => {
+                    if (value) {
+                        data = JSON.parse(value);
+                        updateUI();
+                    }
+                });
             }
+
             updateUI();
         }
 
-        // Сохранение (работает в Telegram)
+        // Сохранение: и в localStorage, и в Telegram
         function saveData() {
+            const json = JSON.stringify(data);
+            localStorage.setItem('rpgData', json);
+
             if (window.Telegram && Telegram.WebApp) {
-                Telegram.WebApp.CloudStorage.setItem('rpgData', JSON.stringify(data));
+                Telegram.WebApp.CloudStorage.setItem('rpgData', json);
             }
         }
 
@@ -161,7 +188,6 @@
                 data.energy = Math.min(100, data.energy + 20);
             }
 
-            // Проверка на новый уровень
             if (data.xp >= data.xpMax) {
                 data.level++;
                 data.xp -= data.xpMax;
@@ -183,6 +209,17 @@
             document.getElementById('energy').innerText = data.energy;
             const percent = (data.xp / data.xpMax) * 100;
             document.getElementById('xpFill').style.width = percent + '%';
+        }
+
+        function resetGame() {
+            if (confirm("Точно сбросить весь прогресс?")) {
+                data = { level: 1, xp: 0, xpMax: 100, str: 0, int: 0, clean: 0, energy: 100 };
+                localStorage.removeItem('rpgData');
+                if (window.Telegram && Telegram.WebApp) {
+                    Telegram.WebApp.CloudStorage.removeItem('rpgData');
+                }
+                updateUI();
+            }
         }
 
         loadData();
