@@ -7,11 +7,8 @@
     <style>
         * { box-sizing: border-box; }
         html, body {
-            height: 100%;
-            margin: 0;
-            padding: 0;
-            overscroll-behavior: none;
-            touch-action: manipulation;
+            height: 100%; overflow: hidden; position: fixed; width: 100%;
+            margin: 0; padding: 0; overscroll-behavior: none; touch-action: manipulation;
         }
         body {
             font-family: 'Courier New', monospace;
@@ -36,15 +33,9 @@
                 radial-gradient(ellipse at 100% 0%, rgba(0, 255, 255, 0.06) 0%, transparent 50%);
         }
 
-        /* ===== ВЕРХНЯЯ ПАНЕЛЬ (НЕ ФИКСИРОВАННАЯ — ПРОКРУЧИВАЕТСЯ) ===== */
         .top-bar {
-            width: 100%;
-            max-width: 400px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 15px 15px 0 15px;
-            flex-shrink: 0;
+            position: fixed; top: 15px; left: 15px; right: 15px;
+            display: flex; align-items: center; gap: 10px; z-index: 100;
         }
         .panel {
             background: rgba(15, 30, 55, 0.9);
@@ -116,28 +107,25 @@
         .name-badge-clickable { cursor: pointer; }
         .name-badge-clickable:active { transform: scale(0.97); }
 
-        /* ===== ОСНОВНОЙ КОНТЕНТ (ЕДИНАЯ ПРОКРУТКА) ===== */
         .page {
-            width: 100%;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-start;
-            gap: 12px;
-            padding: 0 15px 100px 15px;
+            width: 100%; height: 100%; display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            padding: 80px 20px 80px 20px; overflow: hidden;
         }
         .page.hidden { display: none; }
 
-        /* Для главной, профиля и системы — центрируем */
-        #page-home, #page-profile, #page-settings {
-            justify-content: center;
-            padding-top: 20px;
-            padding-bottom: 100px;
+        #page-quests {
+            justify-content: flex-start;
+            padding-top: 110px;
+            padding-bottom: 90px;
+            overflow-y: auto;
+            gap: 15px;
         }
+        #page-quests::-webkit-scrollbar { width: 4px; }
+        #page-quests::-webkit-scrollbar-thumb { background: #1e4a7a; border-radius: 2px; }
+        #page-quests::-webkit-scrollbar-track { background: transparent; }
 
-        /* ===== ПЛАШКА-СЕКЦИЯ ===== */
-        .quests-section {
+        .quests-counter {
             width: 100%; max-width: 340px;
             padding: 14px 18px;
             display: flex;
@@ -145,56 +133,18 @@
             align-items: center;
             backdrop-filter: blur(8px);
             flex-shrink: 0;
-            cursor: pointer;
-            user-select: none;
         }
-        .quests-section:active { transform: scale(0.98); }
-        .quests-section .label {
+        .quests-counter .label {
             font-size: 12px;
             color: #4a7a9a;
             text-transform: uppercase;
             letter-spacing: 2px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
         }
-        .quests-section .arrow {
-            font-size: 12px;
-            color: #00ffff;
-            transition: transform 0.3s ease;
-            display: inline-block;
-        }
-        .quests-section.collapsed .arrow {
-            transform: rotate(-90deg);
-        }
-        .quests-section .value {
+        .quests-counter .value {
             font-size: 20px;
             font-weight: bold;
             color: #00ffff;
             text-shadow: 0 0 8px rgba(0, 255, 255, 0.7);
-        }
-        .quests-section .value.danger {
-            color: #ff5588;
-            text-shadow: 0 0 8px rgba(255, 85, 136, 0.7);
-        }
-
-        /* ===== СПИСКИ КВЕСТОВ ===== */
-        .quests-list {
-            width: 100%;
-            max-width: 340px;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            overflow: hidden;
-            transition: max-height 0.4s ease, opacity 0.3s ease;
-            max-height: none;
-            opacity: 1;
-            flex-shrink: 0;
-        }
-        .quests-list.collapsed {
-            max-height: 0 !important;
-            opacity: 0;
-            pointer-events: none;
         }
 
         .card {
@@ -202,17 +152,16 @@
             padding: 25px 20px;
             text-align: center;
             backdrop-filter: blur(8px);
-            flex-shrink: 0;
         }
 
         .stats-card {
-            min-height: 60vh;
+            height: 60vh;
+            max-height: 550px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: flex-start;
             padding-top: 25px;
-            flex-shrink: 0;
         }
 
         .card-label {
@@ -329,24 +278,6 @@
             box-shadow: 0 0 15px rgba(255, 0, 85, 0.4);
         }
 
-        .quest-card.failed {
-            border-color: #4a1a2a;
-            opacity: 0.7;
-        }
-        .quest-card.failed .quest-title {
-            color: #ff5588;
-            text-shadow: 0 0 8px rgba(255, 85, 136, 0.5);
-        }
-
-        .quest-card.done-card {
-            border-color: #1e4a7a;
-            opacity: 0.6;
-        }
-        .quest-card.done-card .quest-title {
-            color: #4a7a9a;
-            text-shadow: none;
-        }
-
         .name-input {
             width: 100%; padding: 14px;
             background: rgba(10, 20, 40, 0.9);
@@ -400,14 +331,6 @@
         }
         .placeholder-box .big { font-size: 44px; margin-bottom: 12px; opacity: 0.7; }
 
-        .empty-text {
-            font-size: 12px;
-            color: #3a5a7a;
-            text-align: center;
-            padding: 10px 0;
-            letter-spacing: 1px;
-        }
-
         .bottom-nav {
             position: fixed; bottom: 0; left: 0; right: 0; height: 68px;
             background: rgba(5, 10, 20, 0.97);
@@ -441,80 +364,61 @@
     <div class="grid-bg"></div>
     <div class="grid-glow"></div>
 
-    <!-- Верхняя панель теперь ВНУТРИ страницы, а не фиксированная -->
-    <div class="page" id="page-home">
-        <div class="top-bar">
-            <button class="panel menu-btn" id="menuBtn" onclick="toggleSettings()">
-                <span></span><span></span><span></span>
-            </button>
-            <div class="level-badge-wrap" id="levelBadge">
-                <div class="panel badge">
-                    <span class="label">Уровень</span>
-                    <span class="value" id="topLvl">1</span>
-                    <span class="xp-mini">(<span id="topXp">0</span>/<span id="topXpMax">100</span>)</span>
-                </div>
-                <div class="xp-bar">
-                    <div class="xp-fill" id="topXpFill"></div>
-                </div>
+    <div class="top-bar">
+        <button class="panel menu-btn" id="menuBtn" onclick="toggleSettings()">
+            <span></span><span></span><span></span>
+        </button>
+        <div class="level-badge-wrap" id="levelBadge">
+            <div class="panel badge">
+                <span class="label">Уровень</span>
+                <span class="value" id="topLvl">1</span>
+                <span class="xp-mini">(<span id="topXp">0</span>/<span id="topXpMax">100</span>)</span>
             </div>
-            <div class="panel badge hidden name-badge-clickable" id="nameBadge" onclick="goToSettings()">
-                <span class="label">Имя</span>
-                <span class="value" id="topName">Гость</span>
+            <div class="xp-bar">
+                <div class="xp-fill" id="topXpFill"></div>
             </div>
-            <div class="panel badge hidden" id="questsBadge">
-                <span class="value">КВЕСТЫ</span>
-            </div>
+        </div>
+        <div class="panel badge hidden name-badge-clickable" id="nameBadge" onclick="goToSettings()">
+            <span class="label">Имя</span>
+            <span class="value" id="topName">Гость</span>
+        </div>
+        <div class="panel badge hidden" id="questsBadge">
+            <span class="value">КВЕСТЫ</span>
         </div>
     </div>
 
-    <div class="page hidden" id="page-quests">
-        <div class="top-bar">
-            <button class="panel menu-btn" id="menuBtn2" onclick="toggleSettings()">
-                <span></span><span></span><span></span>
-            </button>
-            <div class="panel badge">
-                <span class="value">КВЕСТЫ</span>
-            </div>
-        </div>
+    <div class="page" id="page-home"></div>
 
-        <div class="panel quests-section" id="sectionActive" onclick="toggleSection('active')">
-            <span class="label">
-                <span class="arrow">▼</span>
-                Невыполненные
-            </span>
+    <div class="page hidden" id="page-quests">
+        <div class="panel quests-counter">
+            <span class="label">Невыполненных квестов</span>
             <span class="value" id="questsLeft">2</span>
         </div>
-        <div class="quests-list" id="listActive"></div>
 
-        <div class="panel quests-section" id="sectionDone" onclick="toggleSection('done')">
-            <span class="label">
-                <span class="arrow">▼</span>
-                Выполненные
-            </span>
-            <span class="value" id="questsDoneCount">0</span>
+        <div class="panel quest-card">
+            <div>
+                <div class="quest-title">🏋️ 20 отжиманий</div>
+                <div class="quest-desc">Сделай 20 отжиманий за сегодня.</div>
+                <div class="quest-reward">Награда: +100 XP</div>
+                <div class="quest-penalty">Штраф за отказ: −25 XP</div>
+            </div>
+            <button class="quest-btn" id="questBtn1" onclick="completeQuest(1)">Выполнить</button>
+            <button class="quest-btn quest-btn-refuse" id="questRefuseBtn1" onclick="refuseQuest(1)">Отказаться</button>
         </div>
-        <div class="quests-list" id="listDone"></div>
 
-        <div class="panel quests-section" id="sectionFailed" onclick="toggleSection('failed')">
-            <span class="label">
-                <span class="arrow">▼</span>
-                Проваленные
-            </span>
-            <span class="value danger" id="questsFailedCount">0</span>
+        <div class="panel quest-card">
+            <div>
+                <div class="quest-title">📚 Прочитать 10 страниц</div>
+                <div class="quest-desc">Прочитай 10 страниц любой книги.</div>
+                <div class="quest-reward">Награда: +80 XP</div>
+                <div class="quest-penalty">Штраф за отказ: −20 XP</div>
+            </div>
+            <button class="quest-btn" id="questBtn2" onclick="completeQuest(2)">Выполнить</button>
+            <button class="quest-btn quest-btn-refuse" id="questRefuseBtn2" onclick="refuseQuest(2)">Отказаться</button>
         </div>
-        <div class="quests-list" id="listFailed"></div>
     </div>
 
     <div class="page hidden" id="page-profile">
-        <div class="top-bar">
-            <button class="panel menu-btn" id="menuBtn3" onclick="toggleSettings()">
-                <span></span><span></span><span></span>
-            </button>
-            <div class="panel badge">
-                <span class="value">ПРОФИЛЬ</span>
-            </div>
-        </div>
-
         <div class="panel card stats-card">
             <div class="stats-title">СТАТИСТИКА</div>
             <div class="stats-row">
@@ -533,15 +437,7 @@
     </div>
 
     <div class="page hidden" id="page-settings">
-        <div class="top-bar">
-            <button class="panel menu-btn open" id="menuBtn4" onclick="toggleSettings()">
-                <span></span><span></span><span></span>
-            </button>
-            <div class="panel badge">
-                <span class="value">СИСТЕМА</span>
-            </div>
-        </div>
-
+        <div class="tab-title">СИСТЕМА</div>
         <div class="panel card">
             <div class="card-label">Имя персонажа</div>
             <input 
@@ -584,9 +480,10 @@
         let lastTab = 'home';
 
         const quests = {
-            1: { title: '🏋️ 20 отжиманий', desc: 'Сделай 20 отжиманий за сегодня.', reward: 100, penalty: 25 },
-            2: { title: '📚 Прочитать 10 страниц', desc: 'Прочитай 10 страниц любой книги.', reward: 80, penalty: 20 }
+            1: { reward: 100, penalty: 25 },
+            2: { reward: 80, penalty: 20 }
         };
+        const TOTAL_QUESTS = Object.keys(quests).length;
 
         function loadData() {
             const local = localStorage.getItem('rpgData');
@@ -598,7 +495,8 @@
                 document.getElementById('topName').innerText = data.name;
             }
             updateUI();
-            updateQuestsView();
+            updateAllQuestButtons();
+            updateQuestsCounter();
         }
 
         function saveData() {
@@ -611,7 +509,10 @@
 
         function saveName() {
             const nameValue = document.getElementById('nameInput').value.trim();
-            if (nameValue === '') { alert('Введите имя!'); return; }
+            if (nameValue === '') {
+                alert('Введите имя!');
+                return;
+            }
             data.name = nameValue;
             document.getElementById('topName').innerText = nameValue;
             saveData();
@@ -634,107 +535,20 @@
             }
         }
 
-        function updateQuestsView() {
-            const listActive = document.getElementById('listActive');
-            const listDone = document.getElementById('listDone');
-            const listFailed = document.getElementById('listFailed');
-
-            listActive.innerHTML = '';
-            listDone.innerHTML = '';
-            listFailed.innerHTML = '';
-
-            let activeCount = 0;
-            Object.keys(quests).forEach(id => {
-                const qid = parseInt(id);
-                const isDone = data.questsDone.includes(qid);
-                const isFailed = data.questsFailed.includes(qid);
-                
-                if (!isDone && !isFailed) {
-                    activeCount++;
-                    listActive.appendChild(createQuestCard(qid, 'active'));
-                }
-            });
-            if (activeCount === 0) {
-                const empty = document.createElement('div');
-                empty.className = 'empty-text';
-                empty.innerText = 'Все квесты разобраны';
-                listActive.appendChild(empty);
-            }
-            document.getElementById('questsLeft').innerText = activeCount;
-
-            if (data.questsDone.length === 0) {
-                const empty = document.createElement('div');
-                empty.className = 'empty-text';
-                empty.innerText = 'Пока ничего не выполнено';
-                listDone.appendChild(empty);
-            } else {
-                data.questsDone.forEach(qid => {
-                    if (quests[qid]) listDone.appendChild(createQuestCard(qid, 'done'));
-                });
-            }
-            document.getElementById('questsDoneCount').innerText = data.questsDone.length;
-
-            if (data.questsFailed.length === 0) {
-                const empty = document.createElement('div');
-                empty.className = 'empty-text';
-                empty.innerText = 'Пока ничего не провалено';
-                listFailed.appendChild(empty);
-            } else {
-                data.questsFailed.forEach(qid => {
-                    if (quests[qid]) listFailed.appendChild(createQuestCard(qid, 'failed'));
-                });
-            }
-            document.getElementById('questsFailedCount').innerText = data.questsFailed.length;
-        }
-
-        function createQuestCard(questId, type) {
-            const q = quests[questId];
-            const card = document.createElement('div');
-            card.className = 'panel quest-card';
-            if (type === 'done') card.classList.add('done-card');
-            if (type === 'failed') card.classList.add('failed');
-
-            let buttonsHTML = '';
-            if (type === 'active') {
-                buttonsHTML = `
-                    <button class="quest-btn" onclick="completeQuest(${questId})">Выполнить</button>
-                    <button class="quest-btn quest-btn-refuse" onclick="refuseQuest(${questId})">Отказаться</button>
-                `;
-            } else if (type === 'done') {
-                buttonsHTML = `<button class="quest-btn done" disabled>✓ ВЫПОЛНЕНО</button>`;
-            } else if (type === 'failed') {
-                buttonsHTML = `<button class="quest-btn quest-btn-refuse" disabled style="opacity:0.5; cursor:default;">✕ ПРОВАЛЕНО</button>`;
-            }
-
-            card.innerHTML = `
-                <div>
-                    <div class="quest-title">${q.title}</div>
-                    <div class="quest-desc">${q.desc}</div>
-                    <div class="quest-reward">Награда: +${q.reward} XP</div>
-                    <div class="quest-penalty">Штраф за отказ: −${q.penalty} XP</div>
-                </div>
-                ${buttonsHTML}
-            `;
-            return card;
-        }
-
-        function toggleSection(name) {
-            const section = document.getElementById('section' + capitalize(name));
-            const list = document.getElementById('list' + capitalize(name));
-            section.classList.toggle('collapsed');
-            list.classList.toggle('collapsed');
-        }
-
-        function capitalize(str) {
-            if (str === 'active') return 'Active';
-            if (str === 'done') return 'Done';
-            if (str === 'failed') return 'Failed';
-            return str;
+        function updateQuestsCounter() {
+            const left = TOTAL_QUESTS - data.questsDone.length - data.questsFailed.length;
+            document.getElementById('questsLeft').innerText = left;
         }
 
         function completeQuest(questId) {
-            if (data.questsDone.includes(questId)) { alert('Этот квест уже выполнен!'); return; }
-            if (data.questsFailed.includes(questId)) { alert('Вы отказались от этого квеста!'); return; }
+            if (data.questsDone.includes(questId)) {
+                alert('Этот квест уже выполнен!');
+                return;
+            }
+            if (data.questsFailed.includes(questId)) {
+                alert('Вы отказались от этого квеста!');
+                return;
+            }
             if (!confirm('Квест выполнен?')) return;
 
             const reward = quests[questId].reward;
@@ -751,27 +565,40 @@
             }
 
             updateUI();
-            updateQuestsView();
+            updateAllQuestButtons();
+            updateQuestsCounter();
             saveData();
         }
 
+        // ===== ОТКАЗ ОТ КВЕСТА С ПОНИЖЕНИЕМ УРОВНЯ =====
         function refuseQuest(questId) {
-            if (data.questsDone.includes(questId)) { alert('Этот квест уже выполнен!'); return; }
-            if (data.questsFailed.includes(questId)) { alert('Вы уже отказались от этого квеста!'); return; }
+            if (data.questsDone.includes(questId)) {
+                alert('Этот квест уже выполнен!');
+                return;
+            }
+            if (data.questsFailed.includes(questId)) {
+                alert('Вы уже отказались от этого квеста!');
+                return;
+            }
             const penalty = quests[questId].penalty;
             if (!confirm('Отказаться от квеста? Штраф: −' + penalty + ' XP')) return;
 
             data.questsFailed.push(questId);
             data.xp -= penalty;
 
+            // ===== ПОНИЖЕНИЕ УРОВНЯ, ЕСЛИ XP УШЁЛ В МИНУС =====
             let leveledDown = false;
             while (data.xp < 0) {
                 if (data.level > 1) {
+                    // Понижаем уровень
                     data.level--;
+                    // Восстанавливаем максимум XP для нового уровня (делим на 1.5)
                     data.xpMax = Math.floor(data.xpMax / 1.5);
+                    // Прибавляем максимум к ушедшему в минус XP
                     data.xp += data.xpMax;
                     leveledDown = true;
                 } else {
+                    // Уже 1 уровень — просто обнуляем XP
                     data.xp = 0;
                     break;
                 }
@@ -784,8 +611,45 @@
             }
 
             updateUI();
-            updateQuestsView();
+            updateAllQuestButtons();
+            updateQuestsCounter();
             saveData();
+        }
+
+        function updateAllQuestButtons() {
+            updateQuestButtons(1);
+            updateQuestButtons(2);
+        }
+
+        function updateQuestButtons(questId) {
+            const btnDone = document.getElementById('questBtn' + questId);
+            const btnRefuse = document.getElementById('questRefuseBtn' + questId);
+
+            const isDone = data.questsDone.includes(questId);
+            const isFailed = data.questsFailed.includes(questId);
+
+            if (isDone) {
+                btnDone.innerText = '✓ ВЫПОЛНЕНО';
+                btnDone.classList.add('done');
+                btnDone.disabled = true;
+                btnRefuse.style.display = 'none';
+            } else if (isFailed) {
+                btnDone.style.display = 'none';
+                btnRefuse.innerText = '✕ ПРОВАЛЕНО';
+                btnRefuse.disabled = true;
+                btnRefuse.style.opacity = '0.5';
+                btnRefuse.style.cursor = 'default';
+            } else {
+                btnDone.innerText = 'ВЫПОЛНИТЬ';
+                btnDone.classList.remove('done');
+                btnDone.disabled = false;
+                btnDone.style.display = 'block';
+                btnRefuse.innerText = 'ОТКАЗАТЬСЯ';
+                btnRefuse.disabled = false;
+                btnRefuse.style.display = 'block';
+                btnRefuse.style.opacity = '1';
+                btnRefuse.style.cursor = 'pointer';
+            }
         }
 
         function resetGame() {
@@ -796,25 +660,30 @@
                 document.getElementById('nameInput').value = '';
                 document.getElementById('topName').innerText = 'Гость';
                 updateUI();
-                updateQuestsView();
+                updateAllQuestButtons();
+                updateQuestsCounter();
             }
         }
 
         function goToSettings() {
             lastTab = 'profile';
+            document.getElementById('menuBtn').classList.add('open');
             switchTab('settings', null);
         }
 
         function toggleSettings() {
+            const menuBtn = document.getElementById('menuBtn');
             const settingsPage = document.getElementById('page-settings');
             const isOpen = !settingsPage.classList.contains('hidden');
 
             if (isOpen) {
+                menuBtn.classList.remove('open');
                 const targetBtn = document.querySelector('.nav-item[data-tab="' + lastTab + '"]');
                 switchTab(lastTab, targetBtn);
             } else {
                 const activeNav = document.querySelector('.nav-item.active');
                 lastTab = activeNav ? activeNav.getAttribute('data-tab') : 'home';
+                menuBtn.classList.add('open');
                 switchTab('settings', null);
             }
         }
@@ -824,6 +693,31 @@
             document.getElementById('page-' + tabName).classList.remove('hidden');
             document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
             if (btn) btn.classList.add('active');
+            if (tabName !== 'settings') {
+                document.getElementById('menuBtn').classList.remove('open');
+            }
+
+            const levelBadge = document.getElementById('levelBadge');
+            const nameBadge = document.getElementById('nameBadge');
+            const questsBadge = document.getElementById('questsBadge');
+
+            if (tabName === 'home') {
+                levelBadge.classList.remove('hidden');
+            } else {
+                levelBadge.classList.add('hidden');
+            }
+
+            if (tabName === 'profile') {
+                nameBadge.classList.remove('hidden');
+            } else {
+                nameBadge.classList.add('hidden');
+            }
+
+            if (tabName === 'quests') {
+                questsBadge.classList.remove('hidden');
+            } else {
+                questsBadge.classList.add('hidden');
+            }
 
             const bottomNav = document.getElementById('bottomNav');
             if (tabName === 'settings') {
@@ -833,8 +727,6 @@
             }
 
             updateIcons();
-            window.scrollTo(0, 0);
-            document.querySelectorAll('.page').forEach(p => p.scrollTop = 0);
         }
 
         function updateIcons() {
