@@ -83,10 +83,11 @@
         }
         .page.hidden { display: none; }
 
-        /* ===== СТАТИСТИКА ===== */
+        /* ===== СТАТИСТИКА (растянутая по высоте) ===== */
         .stats-card {
             width: 100%; max-width: 340px;
-            height: 280px;
+            height: 60vh;
+            max-height: 550px;
             background: rgba(10, 20, 40, 0.8);
             border: 1px solid #00ffff;
             border-radius: 0;
@@ -98,6 +99,7 @@
             backdrop-filter: blur(8px);
             box-shadow: 0 0 15px rgba(0, 255, 255, 0.25), inset 0 0 15px rgba(0, 255, 255, 0.08);
             position: relative;
+            padding: 20px;
         }
         .stats-card::before, .stats-card::after {
             content: ''; position: absolute; width: 12px; height: 12px;
