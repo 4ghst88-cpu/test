@@ -7,7 +7,6 @@
     <style>
         body {
             font-family: 'Courier New', monospace;
-            background: linear-gradient(180deg, #0f1729 0%, #0a0e1a 50%, #060810 100%);
             color: #7ad7ff;
             margin: 0;
             padding: 0 0 80px 0;
@@ -16,9 +15,17 @@
             align-items: center;
             min-height: 100vh;
             user-select: none;
+
+            background-image: 
+                linear-gradient(rgba(10, 15, 30, 0.75), rgba(5, 8, 15, 0.9)),
+                url('https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?w=1080&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
         }
 
-        /* ===== КНОПКА МЕНЮ (три полоски) ===== */
+        /* ===== КНОПКА МЕНЮ ===== */
         .menu-btn {
             position: fixed;
             top: 15px;
@@ -49,12 +56,11 @@
             height: 2px;
             background: #7ad7ff;
             border-radius: 1px;
-            transition: all 0.2s;
+            transition: all 0.3s;
         }
-        .menu-btn:hover span {
-            background: #a8e8ff;
-            box-shadow: 0 0 6px #4aa8e8;
-        }
+        .menu-btn.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+        .menu-btn.open span:nth-child(2) { opacity: 0; }
+        .menu-btn.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
         /* ===== ОСНОВНОЙ КОНТЕНТ ===== */
         .page {
@@ -66,8 +72,9 @@
         }
         .page.hidden { display: none; }
 
+        /* Блок уровня и опыта */
         .level-box {
-            background: rgba(15, 30, 55, 0.7);
+            background: rgba(10, 20, 40, 0.85);
             border: 1px solid #1e4a7a;
             box-shadow: 0 0 12px rgba(30, 120, 200, 0.15);
             padding: 18px;
@@ -76,6 +83,7 @@
             text-align: center;
             margin-bottom: 25px;
             border-radius: 4px;
+            backdrop-filter: blur(5px);
         }
         .level {
             font-size: 18px;
@@ -106,39 +114,7 @@
             border-radius: 5px;
         }
 
-        .stats {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            width: 100%;
-            max-width: 340px;
-            margin-bottom: 25px;
-        }
-        .stat {
-            background: rgba(15, 30, 55, 0.6);
-            border: 1px solid #1e4a7a;
-            padding: 12px;
-            text-align: center;
-            border-radius: 4px;
-            transition: all 0.2s;
-        }
-        .stat:hover {
-            border-color: #4aa8e8;
-            box-shadow: 0 0 10px rgba(74, 168, 232, 0.2);
-        }
-        .stat-name {
-            font-size: 11px;
-            color: #4a7a9a;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        .stat-value {
-            font-size: 24px;
-            font-weight: bold;
-            color: #7ad7ff;
-            margin-top: 4px;
-        }
-
+        /* Кнопки действий */
         .actions {
             width: 100%;
             max-width: 340px;
@@ -149,7 +125,7 @@
         .action-btn {
             padding: 16px;
             border: 1px solid #1e4a7a;
-            background: rgba(15, 30, 55, 0.7);
+            background: rgba(10, 20, 40, 0.75);
             color: #7ad7ff;
             font-family: 'Courier New', monospace;
             font-size: 14px;
@@ -162,6 +138,7 @@
             justify-content: space-between;
             align-items: center;
             border-radius: 4px;
+            backdrop-filter: blur(5px);
         }
         .action-btn:hover {
             background: rgba(20, 50, 90, 0.9);
@@ -178,6 +155,60 @@
         .btn-clean { border-left: 3px solid #9b59b6; }
         .btn-sleep { border-left: 3px solid #16a085; }
 
+        /* ===== ПРОФИЛЬ ===== */
+        .profile-card {
+            width: 100%;
+            max-width: 340px;
+            background: rgba(10, 20, 40, 0.85);
+            border: 1px solid #1e4a7a;
+            border-radius: 4px;
+            padding: 25px 20px;
+            text-align: center;
+            backdrop-filter: blur(5px);
+            box-shadow: 0 0 15px rgba(30, 120, 200, 0.2);
+        }
+        .avatar-wrapper {
+            width: 110px;
+            height: 110px;
+            margin: 0 auto 18px;
+            border-radius: 50%;
+            padding: 3px;
+            background: linear-gradient(135deg, #1e6bb8, #4aa8e8);
+            box-shadow: 0 0 20px rgba(74, 168, 232, 0.5);
+        }
+        .avatar {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            background: #0a1520;
+            display: block;
+        }
+        .profile-name {
+            font-size: 22px;
+            font-weight: bold;
+            color: #7ad7ff;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+            text-shadow: 0 0 10px rgba(74, 168, 232, 0.5);
+        }
+        .profile-username {
+            font-size: 13px;
+            color: #4a7a9a;
+            margin-bottom: 20px;
+        }
+        .profile-level {
+            display: inline-block;
+            padding: 8px 20px;
+            background: rgba(30, 107, 184, 0.3);
+            border: 1px solid #1e4a7a;
+            border-radius: 4px;
+            font-size: 14px;
+            color: #7ad7ff;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
         .tab-title {
             font-size: 20px;
             text-transform: uppercase;
@@ -190,13 +221,14 @@
             width: 100%;
             max-width: 340px;
             padding: 35px 20px;
-            background: rgba(15, 30, 55, 0.5);
+            background: rgba(10, 20, 40, 0.7);
             border: 1px dashed #1e4a7a;
             text-align: center;
             color: #4a7a9a;
             font-size: 14px;
             line-height: 1.7;
             border-radius: 4px;
+            backdrop-filter: blur(5px);
         }
         .placeholder-box .big {
             font-size: 44px;
@@ -211,7 +243,7 @@
             left: 0;
             right: 0;
             height: 68px;
-            background: rgba(8, 15, 28, 0.97);
+            background: rgba(5, 10, 20, 0.97);
             border-top: 1px solid #1e4a7a;
             display: flex;
             justify-content: space-around;
@@ -255,14 +287,14 @@
 </head>
 <body>
 
-    <!-- КНОПКА МЕНЮ (ТРИ ПОЛОСКИ) -->
-    <button class="menu-btn" onclick="openSettings()">
+    <!-- КНОПКА МЕНЮ -->
+    <button class="menu-btn" id="menuBtn" onclick="toggleSettings()">
         <span></span>
         <span></span>
         <span></span>
     </button>
 
-    <!-- ===== ГЛАВНАЯ ===== -->
+    <!-- ===== ГЛАВНАЯ (только уровень + кнопки действий) ===== -->
     <div class="page" id="page-home">
         <div class="level-box">
             <div class="level">Уровень <span id="lvl">1</span></div>
@@ -270,22 +302,15 @@
             <div class="xp-bar"><div class="xp-fill" id="xpFill"></div></div>
         </div>
 
-        <div class="stats">
-            <div class="stat"><div class="stat-name">💪 Сила</div><div class="stat-value" id="str">0</div></div>
-            <div class="stat"><div class="stat-name">🧠 Интеллект</div><div class="stat-value" id="int">0</div></div>
-            <div class="stat"><div class="stat-name">🧹 Порядок</div><div class="stat-value" id="clean">0</div></div>
-            <div class="stat"><div class="stat-name">⚡ Энергия</div><div class="stat-value" id="energy">100</div></div>
-        </div>
-
         <div class="actions">
             <button class="action-btn btn-sport" onclick="doAction('sport')">
-                <span>🏋️ Зарядка</span> <span class="reward">+10 STR / +20 XP</span>
+                <span>🏋️ Зарядка</span> <span class="reward">+20 XP</span>
             </button>
             <button class="action-btn btn-study" onclick="doAction('study')">
-                <span>📚 Учёба</span> <span class="reward">+10 INT / +25 XP</span>
+                <span>📚 Учёба</span> <span class="reward">+25 XP</span>
             </button>
             <button class="action-btn btn-clean" onclick="doAction('clean')">
-                <span>🧹 Уборка</span> <span class="reward">+10 ORD / +15 XP</span>
+                <span>🧹 Уборка</span> <span class="reward">+15 XP</span>
             </button>
             <button class="action-btn btn-sleep" onclick="doAction('rest')">
                 <span>😴 Отдых</span> <span class="reward">+20 EN</span>
@@ -293,33 +318,19 @@
         </div>
     </div>
 
-    <!-- ===== ПРОФИЛЬ ===== -->
+    <!-- ===== ПРОФИЛЬ (данные из Telegram) ===== -->
     <div class="page hidden" id="page-profile">
-        <div class="tab-title">👤 Профиль</div>
-        <div class="placeholder-box">
-            <div class="big">👤</div>
-            Информация о персонаже:<br>
-            • Имя<br>
-            • Аватар<br>
-            • Общий прогресс<br>
-            • Достижения
+        <div class="profile-card">
+            <div class="avatar-wrapper">
+                <img class="avatar" id="userAvatar" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='110' height='110'><rect width='110' height='110' fill='%230a1520'/><text x='50%' y='50%' font-size='40' fill='%234a7a9a' text-anchor='middle' dominant-baseline='central'>?</text></svg>" alt="Аватар">
+            </div>
+            <div class="profile-name" id="userName">Гость</div>
+            <div class="profile-username" id="userUsername">@неизвестно</div>
+            <div class="profile-level">Уровень <span id="profileLvl">1</span></div>
         </div>
     </div>
 
-    <!-- ===== КВЕСТЫ ===== -->
-    <div class="page hidden" id="page-quests">
-        <div class="tab-title">📜 Квесты</div>
-        <div class="placeholder-box">
-            <div class="big">📜</div>
-            Ежедневные задания:<br>
-            • 20 отжиманий<br>
-            • Прочитать 10 страниц<br>
-            • Убрать комнату<br><br>
-            Награда — опыт
-        </div>
-    </div>
-
-    <!-- ===== СИСТЕМА (открывается только через кнопку меню) ===== -->
+    <!-- ===== СИСТЕМА ===== -->
     <div class="page hidden" id="page-settings">
         <div class="tab-title">⚙️ Система</div>
         <div class="placeholder-box">
@@ -332,17 +343,13 @@
         </div>
     </div>
 
-    <!-- ===== НИЖНЯЯ НАВИГАЦИЯ (3 вкладки) ===== -->
+    <!-- ===== НИЖНЯЯ НАВИГАЦИЯ (2 вкладки) ===== -->
     <div class="bottom-nav">
-        <button class="nav-item active" onclick="switchTab('home', this)">
+        <button class="nav-item active" data-tab="home" onclick="switchTab('home', this)">
             <span class="icon">⚡</span>
             <span>Главная</span>
         </button>
-        <button class="nav-item" onclick="switchTab('quests', this)">
-            <span class="icon">📜</span>
-            <span>Квесты</span>
-        </button>
-        <button class="nav-item" onclick="switchTab('profile', this)">
+        <button class="nav-item" data-tab="profile" onclick="switchTab('profile', this)">
             <span class="icon">👤</span>
             <span>Профиль</span>
         </button>
@@ -351,8 +358,10 @@
     <script>
         let data = {
             level: 1, xp: 0, xpMax: 100,
-            str: 0, int: 0, clean: 0, energy: 100
+            energy: 100
         };
+
+        let lastTab = 'home';
 
         function loadData() {
             const local = localStorage.getItem('rpgData');
@@ -364,6 +373,27 @@
                 });
             }
             updateUI();
+            loadTelegramUser();
+        }
+
+        // ===== ЗАГРУЗКА ДАННЫХ ИЗ TELEGRAM =====
+        function loadTelegramUser() {
+            if (window.Telegram && Telegram.WebApp && Telegram.WebApp.initDataUnsafe) {
+                const user = Telegram.WebApp.initDataUnsafe.user;
+                if (user) {
+                    // Имя
+                    const fullName = (user.first_name || '') + (user.last_name ? ' ' + user.last_name : '');
+                    document.getElementById('userName').innerText = fullName || 'Гость';
+                    
+                    // Юзернейм
+                    document.getElementById('userUsername').innerText = user.username ? '@' + user.username : '@без_юзернейма';
+                    
+                    // Аватар
+                    if (user.photo_url) {
+                        document.getElementById('userAvatar').src = user.photo_url;
+                    }
+                }
+            }
         }
 
         function saveData() {
@@ -377,11 +407,12 @@
         function doAction(type) {
             if (type === 'sport') {
                 if (data.energy < 20) return alert("Мало энергии! Отдохни 😴");
-                data.str += 10; data.xp += 20; data.energy -= 20;
+                data.xp += 20; data.energy -= 20;
             }
-            if (type === 'study') { data.int += 10; data.xp += 25; }
-            if (type === 'clean') { data.clean += 10; data.xp += 15; }
+            if (type === 'study') { data.xp += 25; }
+            if (type === 'clean') { data.xp += 15; }
             if (type === 'rest') { data.energy = Math.min(100, data.energy + 20); }
+
             if (data.xp >= data.xpMax) {
                 data.level++;
                 data.xp -= data.xpMax;
@@ -396,35 +427,43 @@
             document.getElementById('lvl').innerText = data.level;
             document.getElementById('xp').innerText = data.xp;
             document.getElementById('xpMax').innerText = data.xpMax;
-            document.getElementById('str').innerText = data.str;
-            document.getElementById('int').innerText = data.int;
-            document.getElementById('clean').innerText = data.clean;
-            document.getElementById('energy').innerText = data.energy;
             document.getElementById('xpFill').style.width = (data.xp / data.xpMax) * 100 + '%';
+            document.getElementById('profileLvl').innerText = data.level;
         }
 
         function resetGame() {
             if (confirm("Сбросить весь прогресс?")) {
-                data = { level: 1, xp: 0, xpMax: 100, str: 0, int: 0, clean: 0, energy: 100 };
+                data = { level: 1, xp: 0, xpMax: 100, energy: 100 };
                 localStorage.removeItem('rpgData');
                 if (window.Telegram && Telegram.WebApp) Telegram.WebApp.CloudStorage.removeItem('rpgData');
                 updateUI();
             }
         }
 
-        // Открытие настроек через кнопку с полосками
-        function openSettings() {
-            // Снимаем активность со всех вкладок нижней панели
-            document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
-            switchTab('settings', null);
+        function toggleSettings() {
+            const menuBtn = document.getElementById('menuBtn');
+            const settingsPage = document.getElementById('page-settings');
+            const isOpen = !settingsPage.classList.contains('hidden');
+
+            if (isOpen) {
+                menuBtn.classList.remove('open');
+                const targetBtn = document.querySelector('.nav-item[data-tab="' + lastTab + '"]');
+                switchTab(lastTab, targetBtn);
+            } else {
+                const activeNav = document.querySelector('.nav-item.active');
+                lastTab = activeNav ? activeNav.getAttribute('data-tab') : 'home';
+                menuBtn.classList.add('open');
+                switchTab('settings', null);
+            }
         }
 
         function switchTab(tabName, btn) {
             document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
             document.getElementById('page-' + tabName).classList.remove('hidden');
-            if (btn) {
-                document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
+            document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+            if (btn) btn.classList.add('active');
+            if (tabName !== 'settings') {
+                document.getElementById('menuBtn').classList.remove('open');
             }
             window.scrollTo(0, 0);
         }
