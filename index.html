@@ -2,21 +2,32 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>RPG Жизнь</title>
     <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100%;
+            overflow: hidden;
+            position: fixed;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+            overscroll-behavior: none;
+            touch-action: manipulation;
+        }
+
         body {
             font-family: 'Courier New', monospace;
             color: #7ad7ff;
-            margin: 0;
-            padding: 0 0 80px 0;
             display: flex;
             flex-direction: column;
             align-items: center;
-            min-height: 100vh;
             user-select: none;
             background-color: #0a0a1a;
-            overflow-x: hidden;
         }
 
         /* ===== ФОН: СТАТИЧНАЯ НЕОНОВАЯ СЕТКА ===== */
@@ -94,10 +105,13 @@
         /* ===== ОСНОВНОЙ КОНТЕНТ ===== */
         .page {
             width: 100%;
+            height: 100%;
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding-top: 70px;
+            justify-content: center;
+            padding: 70px 20px 90px 20px;
+            overflow: hidden;
         }
         .page.hidden { display: none; }
 
@@ -111,7 +125,6 @@
             width: 100%;
             max-width: 340px;
             text-align: center;
-            margin-bottom: 25px;
             border-radius: 0;
             backdrop-filter: blur(8px);
             position: relative;
@@ -245,14 +258,14 @@
             text-transform: uppercase;
             letter-spacing: 3px;
             color: #00ffff;
-            margin: 20px 0 25px;
+            margin: 0 0 20px 0;
             text-align: center;
             text-shadow: 0 0 10px #00ffff;
         }
         .placeholder-box {
             width: 100%;
             max-width: 340px;
-            padding: 35px 20px;
+            padding: 30px 20px;
             background: rgba(10, 20, 40, 0.75);
             border: 1px dashed #004466;
             text-align: center;
@@ -268,7 +281,7 @@
             opacity: 0.7;
         }
         .action-btn {
-            padding: 16px;
+            padding: 14px;
             border: 1px solid #0088ff;
             background: rgba(0, 30, 60, 0.8);
             color: #00ffff;
@@ -280,13 +293,13 @@
             transition: all 0.2s;
             border-radius: 0;
             backdrop-filter: blur(8px);
+            width: 100%;
         }
         .action-btn:hover {
             background: rgba(0, 60, 120, 0.9);
             border-color: #00ffff;
             box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
         }
-        .btn-sport { border-left: 3px solid #ff0055; }
 
         /* ===== НИЖНЯЯ ПАНЕЛЬ ===== */
         .bottom-nav {
@@ -324,8 +337,8 @@
             position: relative;
         }
         .nav-item .icon {
-            font-size: 22px;
-            font-weight: bold;
+            font-size: 24px;
+            font-weight: normal;
             letter-spacing: 0;
             line-height: 1;
             transition: all 0.2s;
@@ -378,7 +391,7 @@
     <div class="page hidden" id="page-quests">
         <div class="tab-title">КВЕСТЫ</div>
         <div class="placeholder-box">
-            <div class="big">[ ]</div>
+            <div class="big">⬡</div>
             Здесь появятся ежедневные задания:<br>
             • 20 отжиманий<br>
             • Прочитать 10 страниц<br>
@@ -403,27 +416,27 @@
     <div class="page hidden" id="page-settings">
         <div class="tab-title">СИСТЕМА</div>
         <div class="placeholder-box">
-            <div class="big">[ ⚙ ]</div>
+            <div class="big">⬣</div>
             Настройки:<br>
             • Смена темы<br>
             • Звук<br>
             • Сброс прогресса<br><br>
-            <button class="action-btn btn-sport" style="margin-top:20px; width:100%;" onclick="resetGame()">[ СБРОСИТЬ ПРОГРЕСС ]</button>
+            <button class="action-btn" style="margin-top:20px;" onclick="resetGame()">⬣ СБРОСИТЬ ПРОГРЕСС</button>
         </div>
     </div>
 
-    <!-- ===== НИЖНЯЯ НАВИГАЦИЯ ===== -->
+    <!-- ===== НИЖНЯЯ НАВИГАЦИЯ (ГЕКСАГОНЫ) ===== -->
     <div class="bottom-nav">
         <button class="nav-item active" data-tab="home" onclick="switchTab('home', this)">
-            <span class="icon">[&gt;]</span>
+            <span class="icon">⬢</span>
             <span>Главная</span>
         </button>
         <button class="nav-item" data-tab="quests" onclick="switchTab('quests', this)">
-            <span class="icon">[?]</span>
+            <span class="icon">⬡</span>
             <span>Квесты</span>
         </button>
         <button class="nav-item" data-tab="profile" onclick="switchTab('profile', this)">
-            <span class="icon">[@]</span>
+            <span class="icon">⬣</span>
             <span>Профиль</span>
         </button>
     </div>
@@ -512,7 +525,6 @@
             if (tabName !== 'settings') {
                 document.getElementById('menuBtn').classList.remove('open');
             }
-            window.scrollTo(0, 0);
         }
 
         loadData();
