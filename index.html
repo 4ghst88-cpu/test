@@ -57,6 +57,7 @@
         .menu-btn.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
         .badge {
+            flex: 1;
             height: 48px;
             background: rgba(15, 30, 55, 0.9);
             border: 1px solid #1e4a7a;
@@ -72,17 +73,6 @@
             text-shadow: 0 0 8px rgba(0, 255, 255, 0.7); letter-spacing: 1px;
         }
         .badge .xp-mini { font-size: 10px; color: #4a7a9a; }
-
-        .level-badge { flex: 1; }
-        .name-badge { flex: 1; }
-        .name-badge .value { 
-            font-size: 15px; 
-            max-width: 100px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-
         .badge.hidden { display: none; }
 
         /* ===== ОСНОВНОЙ КОНТЕНТ ===== */
@@ -90,6 +80,7 @@
             width: 100%; height: 100%; display: flex; flex-direction: column;
             align-items: center; justify-content: center;
             padding: 90px 20px 90px 20px; overflow: hidden;
+            gap: 20px;
         }
         .page.hidden { display: none; }
 
@@ -97,7 +88,7 @@
         .profile-card {
             width: 100%; max-width: 340px;
             background: rgba(10, 20, 40, 0.8); border: 1px solid #00ffff;
-            border-radius: 0; padding: 40px 20px; text-align: center;
+            border-radius: 0; padding: 30px 20px; text-align: center;
             backdrop-filter: blur(8px);
             box-shadow: 0 0 15px rgba(0, 255, 255, 0.25), inset 0 0 15px rgba(0, 255, 255, 0.08);
             position: relative;
@@ -111,23 +102,61 @@
 
         .profile-label {
             font-size: 12px; color: #4a7a9a; text-transform: uppercase;
-            letter-spacing: 2px; margin-bottom: 15px;
+            letter-spacing: 2px; margin-bottom: 12px;
         }
         .profile-name-big {
-            font-size: 28px;
+            font-size: 26px;
             font-weight: bold;
             color: #00ffff;
             letter-spacing: 2px;
             text-shadow: 0 0 15px #00ffff;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
         }
 
         .profile-level {
-            display: inline-block; padding: 12px 30px;
+            display: inline-block; padding: 10px 25px;
             background: rgba(0, 136, 255, 0.2); border: 1px solid #0088ff;
-            border-radius: 0; font-size: 16px; color: #00ffff;
+            border-radius: 0; font-size: 14px; color: #00ffff;
             letter-spacing: 2px; text-transform: uppercase;
             box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+        }
+
+        /* ===== СТАТИСТИКА (квадрат по центру) ===== */
+        .stats-card {
+            width: 100%; max-width: 340px;
+            height: 180px;
+            background: rgba(10, 20, 40, 0.8);
+            border: 1px solid #00ffff;
+            border-radius: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            backdrop-filter: blur(8px);
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.25), inset 0 0 15px rgba(0, 255, 255, 0.08);
+            position: relative;
+        }
+        .stats-card::before, .stats-card::after {
+            content: ''; position: absolute; width: 12px; height: 12px;
+            border: 2px solid #00ffff; box-shadow: 0 0 8px #00ffff;
+        }
+        .stats-card::before { top: -2px; left: -2px; border-right: none; border-bottom: none; }
+        .stats-card::after { bottom: -2px; right: -2px; border-left: none; border-top: none; }
+
+        .stats-title {
+            font-size: 18px;
+            color: #00ffff;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            text-shadow: 0 0 10px #00ffff;
+            margin-bottom: 15px;
+        }
+        .stats-empty {
+            font-size: 12px;
+            color: #4a7a9a;
+            letter-spacing: 1px;
+            line-height: 1.6;
         }
 
         /* ===== СИСТЕМА ===== */
@@ -250,14 +279,14 @@
         <button class="menu-btn" id="menuBtn" onclick="toggleSettings()">
             <span></span><span></span><span></span>
         </button>
-        <div class="badge name-badge" id="nameBadge">
-            <span class="label">Имя</span>
-            <span class="value" id="topName">Гость</span>
-        </div>
-        <div class="badge level-badge" id="levelBadge">
-            <span class="label">Ур.</span>
+        <div class="badge" id="levelBadge">
+            <span class="label">Уровень</span>
             <span class="value" id="topLvl">1</span>
             <span class="xp-mini">(<span id="topXp">0</span>/<span id="topXpMax">100</span>)</span>
+        </div>
+        <div class="badge hidden" id="nameBadge">
+            <span class="label">Имя</span>
+            <span class="value" id="topName">Гость</span>
         </div>
     </div>
 
@@ -279,10 +308,20 @@
 
     <!-- ===== ПРОФИЛЬ ===== -->
     <div class="page hidden" id="page-profile">
+        <!-- Карточка профиля -->
         <div class="profile-card">
             <div class="profile-label">Персонаж</div>
             <div class="profile-name-big" id="profileNameBig">Гость</div>
             <div class="profile-level">Уровень <span id="profileLvl">1</span></div>
+        </div>
+
+        <!-- Квадрат статистики -->
+        <div class="stats-card">
+            <div class="stats-title">СТАТИСТИКА</div>
+            <div class="stats-empty">
+                Пока пусто...<br>
+                Скоро здесь появятся показатели
+            </div>
         </div>
     </div>
 
@@ -410,11 +449,15 @@
             const levelBadge = document.getElementById('levelBadge');
             const nameBadge = document.getElementById('nameBadge');
 
-            if (tabName === 'home' || tabName === 'profile') {
+            if (tabName === 'home') {
                 levelBadge.classList.remove('hidden');
-                nameBadge.classList.remove('hidden');
             } else {
                 levelBadge.classList.add('hidden');
+            }
+
+            if (tabName === 'profile') {
+                nameBadge.classList.remove('hidden');
+            } else {
                 nameBadge.classList.add('hidden');
             }
 
