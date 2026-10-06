@@ -38,7 +38,6 @@
             position: fixed; top: 15px; left: 15px; right: 15px;
             display: flex; align-items: center; gap: 10px; z-index: 100;
         }
-
         .panel {
             background: rgba(15, 30, 55, 0.9);
             border: 1px solid #1e4a7a;
@@ -51,7 +50,6 @@
             border-color: #00ffff;
             box-shadow: 0 0 15px rgba(0, 255, 255, 0.4);
         }
-
         .menu-btn {
             flex-shrink: 0; width: 48px; height: 48px;
             cursor: pointer; display: flex; flex-direction: column;
@@ -68,7 +66,6 @@
         .menu-btn.open span:nth-child(2) { opacity: 0; }
         .menu-btn.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
-        /* Плашки (уровень, имя, квесты) */
         .badge {
             flex: 1; height: 48px;
             display: flex; align-items: center; justify-content: center;
@@ -82,12 +79,8 @@
         .badge .xp-mini { font-size: 10px; color: #4a7a9a; }
         .badge.hidden { display: none; }
 
-        .name-badge-clickable {
-            cursor: pointer;
-        }
-        .name-badge-clickable:active {
-            transform: scale(0.97);
-        }
+        .name-badge-clickable { cursor: pointer; }
+        .name-badge-clickable:active { transform: scale(0.97); }
 
         /* ===== ОСНОВНОЙ КОНТЕНТ ===== */
         .page {
@@ -123,14 +116,90 @@
             color: #4a7a9a;
             text-transform: uppercase;
             letter-spacing: 3px;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
 
-        .stats-empty {
+        /* ===== СТАТИСТИКА: строки ===== */
+        .stats-row {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #1e4a7a;
+        }
+        .stats-row:last-child { border-bottom: none; }
+        .stats-row .label {
             font-size: 13px;
-            color: #3a5a7a;
+            color: #4a7a9a;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        .stats-row .value {
+            font-size: 20px;
+            font-weight: bold;
+            color: #00ffff;
+            text-shadow: 0 0 8px rgba(0, 255, 255, 0.7);
+        }
+
+        /* ===== КВЕСТЫ ===== */
+        .quest-card {
+            width: 100%; max-width: 340px;
+            padding: 20px;
+            text-align: left;
+            backdrop-filter: blur(8px);
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .quest-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #00ffff;
             letter-spacing: 1px;
-            line-height: 1.8;
+            text-shadow: 0 0 8px rgba(0, 255, 255, 0.5);
+            margin-bottom: 5px;
+        }
+        .quest-desc {
+            font-size: 12px;
+            color: #4a7a9a;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+        .quest-reward {
+            font-size: 13px;
+            color: #ffcc00;
+            text-shadow: 0 0 6px rgba(255, 204, 0, 0.5);
+            margin-bottom: 15px;
+        }
+        .quest-btn {
+            width: 100%;
+            padding: 12px;
+            background: rgba(15, 30, 55, 0.9);
+            border: 1px solid #1e4a7a;
+            color: #00ffff;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-radius: 4px;
+        }
+        .quest-btn:hover {
+            border-color: #00ffff;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.4);
+        }
+        .quest-btn:active { transform: scale(0.97); }
+        .quest-btn.done {
+            color: #4a7a9a;
+            border-color: #1e4a7a;
+            cursor: default;
+        }
+        .quest-btn.done:hover {
+            border-color: #1e4a7a;
+            box-shadow: none;
         }
 
         .name-input {
@@ -225,18 +294,15 @@
         <button class="panel menu-btn" id="menuBtn" onclick="toggleSettings()">
             <span></span><span></span><span></span>
         </button>
-        <!-- Плашка уровня (главная) -->
         <div class="panel badge" id="levelBadge">
             <span class="label">Уровень</span>
             <span class="value" id="topLvl">1</span>
             <span class="xp-mini">(<span id="topXp">0</span>/<span id="topXpMax">100</span>)</span>
         </div>
-        <!-- Плашка имени (профиль) -->
         <div class="panel badge hidden name-badge-clickable" id="nameBadge" onclick="goToSettings()">
             <span class="label">Имя</span>
             <span class="value" id="topName">Гость</span>
         </div>
-        <!-- Плашка квестов (квесты) -->
         <div class="panel badge hidden" id="questsBadge">
             <span class="value">КВЕСТЫ</span>
         </div>
@@ -247,13 +313,13 @@
 
     <!-- ===== КВЕСТЫ ===== -->
     <div class="page hidden" id="page-quests">
-        <div class="placeholder-box">
-            <div class="big">⬡</div>
-            Здесь появятся ежедневные задания:<br>
-            • 20 отжиманий<br>
-            • Прочитать 10 страниц<br>
-            • Убрать комнату<br><br>
-            Награда — опыт
+        <div class="panel quest-card">
+            <div>
+                <div class="quest-title">🏋️ 20 отжиманий</div>
+                <div class="quest-desc">Сделай 20 отжиманий за сегодня.</div>
+                <div class="quest-reward">+50 XP</div>
+            </div>
+            <button class="quest-btn" id="questBtn1" onclick="completeQuest(1)">Выполнить</button>
         </div>
     </div>
 
@@ -261,9 +327,9 @@
     <div class="page hidden" id="page-profile">
         <div class="panel card stats-card">
             <div class="stats-title">СТАТИСТИКА</div>
-            <div class="stats-empty">
-                Пока пусто...<br>
-                Скоро здесь появятся показатели
+            <div class="stats-row">
+                <span class="label">Уровень</span>
+                <span class="value" id="profileLvl">1</span>
             </div>
         </div>
     </div>
@@ -303,17 +369,25 @@
     </div>
 
     <script>
-        let data = { level: 1, xp: 0, xpMax: 100, name: 'Гость' };
+        let data = { 
+            level: 1, 
+            xp: 0, 
+            xpMax: 100, 
+            name: 'Гость',
+            questsDone: []  // массив выполненных квестов
+        };
         let lastTab = 'home';
 
         function loadData() {
             const local = localStorage.getItem('rpgData');
             if (local) data = JSON.parse(local);
+            if (!data.questsDone) data.questsDone = [];
             if (data.name) {
                 document.getElementById('nameInput').value = data.name;
                 document.getElementById('topName').innerText = data.name;
             }
             updateUI();
+            updateQuestButton();
         }
 
         function saveData() {
@@ -340,19 +414,60 @@
             document.getElementById('topLvl').innerText = data.level;
             document.getElementById('topXp').innerText = data.xp;
             document.getElementById('topXpMax').innerText = data.xpMax;
+            document.getElementById('profileLvl').innerText = data.level;
             if (data.name) {
                 document.getElementById('topName').innerText = data.name;
             }
         }
 
+        // ===== ВЫПОЛНЕНИЕ КВЕСТА =====
+        function completeQuest(questId) {
+            if (data.questsDone.includes(questId)) {
+                alert('Этот квест уже выполнен!');
+                return;
+            }
+            if (!confirm('Квест выполнен?')) return;
+
+            data.questsDone.push(questId);
+            data.xp += 50;
+
+            // Проверка на новый уровень
+            if (data.xp >= data.xpMax) {
+                data.level++;
+                data.xp -= data.xpMax;
+                data.xpMax = Math.floor(data.xpMax * 1.5);
+                alert('🎉 Новый уровень! Теперь ты ' + data.level + ' уровня!');
+            } else {
+                alert('✅ Квест выполнен! +50 XP');
+            }
+
+            updateUI();
+            updateQuestButton();
+            saveData();
+        }
+
+        function updateQuestButton() {
+            const btn = document.getElementById('questBtn1');
+            if (data.questsDone.includes(1)) {
+                btn.innerText = '✓ ВЫПОЛНЕНО';
+                btn.classList.add('done');
+                btn.disabled = true;
+            } else {
+                btn.innerText = 'ВЫПОЛНИТЬ';
+                btn.classList.remove('done');
+                btn.disabled = false;
+            }
+        }
+
         function resetGame() {
             if (confirm("Сбросить весь прогресс?")) {
-                data = { level: 1, xp: 0, xpMax: 100, name: 'Гость' };
+                data = { level: 1, xp: 0, xpMax: 100, name: 'Гость', questsDone: [] };
                 localStorage.removeItem('rpgData');
                 if (window.Telegram && Telegram.WebApp) Telegram.WebApp.CloudStorage.removeItem('rpgData');
                 document.getElementById('nameInput').value = '';
                 document.getElementById('topName').innerText = 'Гость';
                 updateUI();
+                updateQuestButton();
             }
         }
 
@@ -392,21 +507,18 @@
             const nameBadge = document.getElementById('nameBadge');
             const questsBadge = document.getElementById('questsBadge');
 
-            // Уровень — только на главной
             if (tabName === 'home') {
                 levelBadge.classList.remove('hidden');
             } else {
                 levelBadge.classList.add('hidden');
             }
 
-            // Имя — только в профиле
             if (tabName === 'profile') {
                 nameBadge.classList.remove('hidden');
             } else {
                 nameBadge.classList.add('hidden');
             }
 
-            // Квесты — только на вкладке квестов
             if (tabName === 'quests') {
                 questsBadge.classList.remove('hidden');
             } else {
