@@ -72,7 +72,6 @@
             z-index: 100;
         }
 
-        /* Кнопка меню */
         .menu-btn {
             flex-shrink: 0;
             width: 48px;
@@ -110,7 +109,6 @@
         .menu-btn.open span:nth-child(2) { opacity: 0; }
         .menu-btn.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
-        /* Плашка с уровнем (в стиле кнопки меню) */
         .level-badge {
             flex: 1;
             height: 48px;
@@ -147,6 +145,9 @@
             color: #4a7a9a;
             margin-left: auto;
         }
+        .level-badge.hidden {
+            display: none;
+        }
 
         /* ===== ОСНОВНОЙ КОНТЕНТ ===== */
         .page {
@@ -160,69 +161,6 @@
             overflow: hidden;
         }
         .page.hidden { display: none; }
-
-        /* Большой блок уровня (для профиля) */
-        .level-box {
-            background: rgba(10, 20, 40, 0.8);
-            border: 1px solid #00ffff;
-            box-shadow: 
-                0 0 15px rgba(0, 255, 255, 0.25),
-                inset 0 0 15px rgba(0, 255, 255, 0.08);
-            padding: 18px;
-            width: 100%;
-            max-width: 340px;
-            text-align: center;
-            border-radius: 0;
-            backdrop-filter: blur(8px);
-            position: relative;
-        }
-        .level-box::before,
-        .level-box::after {
-            content: '';
-            position: absolute;
-            width: 12px;
-            height: 12px;
-            border: 2px solid #00ffff;
-            box-shadow: 0 0 8px #00ffff;
-        }
-        .level-box::before {
-            top: -2px; left: -2px;
-            border-right: none; border-bottom: none;
-        }
-        .level-box::after {
-            bottom: -2px; right: -2px;
-            border-left: none; border-top: none;
-        }
-
-        .level {
-            font-size: 18px;
-            color: #00ffff;
-            font-weight: bold;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            text-shadow: 0 0 10px #00ffff;
-        }
-        .xp-text {
-            font-size: 13px;
-            color: #4a7a9a;
-            margin-top: 5px;
-        }
-        .xp-bar {
-            width: 100%;
-            height: 10px;
-            background: #001020;
-            border: 1px solid #004466;
-            overflow: hidden;
-            margin-top: 10px;
-            border-radius: 0;
-        }
-        .xp-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #0088ff, #00ffff);
-            width: 0%;
-            transition: width 0.4s;
-            box-shadow: 0 0 10px #00ffff;
-        }
 
         /* ===== ПРОФИЛЬ ===== */
         .profile-card {
@@ -363,7 +301,15 @@
             z-index: 99;
             backdrop-filter: blur(10px);
             box-shadow: 0 -5px 20px rgba(0, 255, 255, 0.15);
+            transition: transform 0.3s ease, opacity 0.3s ease;
         }
+        /* Скрытие нижней панели, когда открыты настройки */
+        .bottom-nav.hidden {
+            transform: translateY(100%);
+            opacity: 0;
+            pointer-events: none;
+        }
+
         .nav-item {
             flex: 1;
             height: 100%;
@@ -425,14 +371,14 @@
             <span></span>
             <span></span>
         </button>
-        <div class="level-badge">
+        <div class="level-badge" id="levelBadge">
             <span class="label">Уровень</span>
             <span class="value" id="topLvl">1</span>
             <span class="xp-mini">(<span id="topXp">0</span>/<span id="topXpMax">100</span>)</span>
         </div>
     </div>
 
-    <!-- ===== ГЛАВНАЯ (пустая) ===== -->
+    <!-- ===== ГЛАВНАЯ ===== -->
     <div class="page" id="page-home">
     </div>
 
@@ -475,7 +421,7 @@
     </div>
 
     <!-- ===== НИЖНЯЯ НАВИГАЦИЯ ===== -->
-    <div class="bottom-nav">
+    <div class="bottom-nav" id="bottomNav">
         <button class="nav-item active" data-tab="home" onclick="switchTab('home', this)">
             <span class="icon">⬢</span>
             <span>Главная</span>
@@ -533,11 +479,9 @@
         }
 
         function updateUI() {
-            // Данные в верхней панели
             document.getElementById('topLvl').innerText = data.level;
             document.getElementById('topXp').innerText = data.xp;
             document.getElementById('topXpMax').innerText = data.xpMax;
-            // Уровень в профиле
             document.getElementById('profileLvl').innerText = data.level;
         }
 
@@ -550,6 +494,7 @@
             }
         }
 
+        // ===== ПЕРЕКЛЮЧАТЕЛЬ НАСТРОЕК =====
         function toggleSettings() {
             const menuBtn = document.getElementById('menuBtn');
             const settingsPage = document.getElementById('page-settings');
@@ -575,6 +520,23 @@
             if (tabName !== 'settings') {
                 document.getElementById('menuBtn').classList.remove('open');
             }
+
+            // Скрываем плашку уровня, если не на главной
+            const levelBadge = document.getElementById('levelBadge');
+            if (tabName === 'home') {
+                levelBadge.classList.remove('hidden');
+            } else {
+                levelBadge.classList.add('hidden');
+            }
+
+            // ===== СКРЫВАЕМ НИЖНЮЮ ПАНЕЛЬ В НАСТРОЙКАХ =====
+            const bottomNav = document.getElementById('bottomNav');
+            if (tabName === 'settings') {
+                bottomNav.classList.add('hidden');
+            } else {
+                bottomNav.classList.remove('hidden');
+            }
+
             updateIcons();
         }
 
