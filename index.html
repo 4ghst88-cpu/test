@@ -3,49 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cyber RPG</title>
+    <title>RPG Жизнь</title>
     <style>
         body {
             font-family: 'Courier New', monospace;
-            background-color: #0a0a1a;
-            background-image: 
-                linear-gradient(rgba(0, 255, 255, 0.05) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 255, 255, 0.05) 1px, transparent 1px);
-            background-size: 20px 20px;
-            color: #00ffff;
+            background: linear-gradient(180deg, #0f1729 0%, #0a0e1a 50%, #060810 100%);
+            color: #7ad7ff;
             margin: 0;
-            padding: 0 0 80px 0; /* отступ снизу под панель */
+            padding: 0 0 80px 0;
             display: flex;
             flex-direction: column;
             align-items: center;
             min-height: 100vh;
             user-select: none;
-            position: relative;
         }
 
-        /* ===== КНОПКА НАСТРОЕК ===== */
-        .settings-btn {
+        /* ===== КНОПКА МЕНЮ (три полоски) ===== */
+        .menu-btn {
             position: fixed;
             top: 15px;
             left: 15px;
-            width: 42px;
-            height: 42px;
-            background: rgba(0, 20, 40, 0.9);
-            border: 1px solid #00ffff;
-            color: #00ffff;
-            font-size: 22px;
+            width: 44px;
+            height: 44px;
+            background: rgba(15, 30, 55, 0.9);
+            border: 1px solid #1e4a7a;
             cursor: pointer;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 0 10px rgba(0, 255, 255, 0.4), inset 0 0 10px rgba(0, 255, 255, 0.1);
+            gap: 5px;
             transition: all 0.2s;
             z-index: 100;
+            border-radius: 4px;
+            padding: 0;
         }
-        .settings-btn:hover {
-            background: rgba(0, 60, 120, 0.9);
-            box-shadow: 0 0 20px #00ffff;
-            transform: rotate(90deg);
+        .menu-btn:hover {
+            border-color: #4aa8e8;
+            box-shadow: 0 0 12px rgba(74, 168, 232, 0.3);
+        }
+        .menu-btn:active { transform: scale(0.95); }
+        .menu-btn span {
+            display: block;
+            width: 22px;
+            height: 2px;
+            background: #7ad7ff;
+            border-radius: 1px;
+            transition: all 0.2s;
+        }
+        .menu-btn:hover span {
+            background: #a8e8ff;
+            box-shadow: 0 0 6px #4aa8e8;
         }
 
         /* ===== ОСНОВНОЙ КОНТЕНТ ===== */
@@ -54,143 +62,157 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding-top: 20px;
+            padding-top: 70px;
         }
         .page.hidden { display: none; }
 
-        h1 {
-            font-size: 24px;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            text-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff;
-            margin: 40px 0 20px;
-            animation: flicker 3s infinite;
-        }
-        @keyframes flicker {
-            0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { opacity: 1; }
-            20%, 22%, 24%, 55% { opacity: 0.5; }
-        }
         .level-box {
-            background: rgba(0, 20, 40, 0.8);
-            border: 1px solid #00ffff;
-            box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
-            padding: 15px;
+            background: rgba(15, 30, 55, 0.7);
+            border: 1px solid #1e4a7a;
+            box-shadow: 0 0 12px rgba(30, 120, 200, 0.15);
+            padding: 18px;
             width: 100%;
-            max-width: 350px;
+            max-width: 340px;
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
+            border-radius: 4px;
         }
         .level {
-            font-size: 20px;
-            color: #00ffff;
+            font-size: 18px;
+            color: #7ad7ff;
             font-weight: bold;
-            text-shadow: 0 0 8px #00ffff;
-            text-transform: uppercase;
             letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+        .xp-text {
+            font-size: 13px;
+            color: #4a7a9a;
+            margin-top: 5px;
         }
         .xp-bar {
             width: 100%;
-            height: 12px;
-            background: #001020;
-            border: 1px solid #004466;
+            height: 10px;
+            background: #0a1520;
+            border: 1px solid #1e4a7a;
             overflow: hidden;
             margin-top: 10px;
+            border-radius: 5px;
         }
         .xp-fill {
             height: 100%;
-            background: linear-gradient(90deg, #0088ff, #00ffff);
+            background: linear-gradient(90deg, #1e6bb8, #4aa8e8);
             width: 0%;
-            transition: width 0.3s;
-            box-shadow: 0 0 10px #00ffff;
+            transition: width 0.4s;
+            border-radius: 5px;
         }
+
         .stats {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 10px;
+            gap: 12px;
             width: 100%;
-            max-width: 350px;
-            margin-bottom: 20px;
+            max-width: 340px;
+            margin-bottom: 25px;
         }
         .stat {
-            background: rgba(0, 20, 40, 0.8);
-            border: 1px solid #004466;
-            box-shadow: 0 0 8px rgba(0, 255, 255, 0.2);
-            padding: 10px;
+            background: rgba(15, 30, 55, 0.6);
+            border: 1px solid #1e4a7a;
+            padding: 12px;
             text-align: center;
-            position: relative;
+            border-radius: 4px;
+            transition: all 0.2s;
         }
-        .stat::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0;
-            width: 8px; height: 8px;
-            border-top: 2px solid #00ffff;
-            border-left: 2px solid #00ffff;
+        .stat:hover {
+            border-color: #4aa8e8;
+            box-shadow: 0 0 10px rgba(74, 168, 232, 0.2);
         }
-        .stat-name { font-size: 11px; color: #0088aa; text-transform: uppercase; }
-        .stat-value { font-size: 22px; font-weight: bold; color: #00ffff; text-shadow: 0 0 8px #00ffff; }
+        .stat-name {
+            font-size: 11px;
+            color: #4a7a9a;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #7ad7ff;
+            margin-top: 4px;
+        }
 
         .actions {
             width: 100%;
-            max-width: 350px;
+            max-width: 340px;
             display: flex;
             flex-direction: column;
             gap: 10px;
         }
         .action-btn {
-            padding: 15px;
-            border: 1px solid #0088ff;
-            background: rgba(0, 30, 60, 0.8);
-            color: #00ffff;
+            padding: 16px;
+            border: 1px solid #1e4a7a;
+            background: rgba(15, 30, 55, 0.7);
+            color: #7ad7ff;
             font-family: 'Courier New', monospace;
-            font-size: 15px;
+            font-size: 14px;
             font-weight: bold;
-            text-transform: uppercase;
+            letter-spacing: 1px;
             cursor: pointer;
             transition: all 0.2s;
             text-align: left;
             display: flex;
             justify-content: space-between;
-            box-shadow: 0 0 8px rgba(0, 136, 255, 0.3);
+            align-items: center;
+            border-radius: 4px;
         }
-        .action-btn:hover { background: rgba(0, 60, 120, 0.9); box-shadow: 0 0 20px rgba(0, 255, 255, 0.6); border-color: #00ffff; }
+        .action-btn:hover {
+            background: rgba(20, 50, 90, 0.9);
+            border-color: #4aa8e8;
+            box-shadow: 0 0 12px rgba(74, 168, 232, 0.25);
+        }
         .action-btn:active { transform: scale(0.98); }
-        .btn-sport { border-left: 4px solid #ff0055; }
-        .btn-study { border-left: 4px solid #0088ff; }
-        .btn-clean { border-left: 4px solid #aa00ff; }
-        .btn-sleep { border-left: 4px solid #00ffaa; }
+        .action-btn .reward {
+            font-size: 11px;
+            color: #4a7a9a;
+        }
+        .btn-sport { border-left: 3px solid #e94560; }
+        .btn-study { border-left: 3px solid #4aa8e8; }
+        .btn-clean { border-left: 3px solid #9b59b6; }
+        .btn-sleep { border-left: 3px solid #16a085; }
 
-        /* ===== ВКЛАДКИ (контент) ===== */
         .tab-title {
-            font-size: 22px;
+            font-size: 20px;
             text-transform: uppercase;
-            letter-spacing: 2px;
-            text-shadow: 0 0 10px #00ffff;
-            margin: 30px 0 20px;
+            letter-spacing: 3px;
+            color: #7ad7ff;
+            margin: 20px 0 25px;
+            text-align: center;
         }
         .placeholder-box {
             width: 100%;
-            max-width: 350px;
-            padding: 30px 20px;
-            background: rgba(0, 20, 40, 0.6);
-            border: 1px dashed #004466;
+            max-width: 340px;
+            padding: 35px 20px;
+            background: rgba(15, 30, 55, 0.5);
+            border: 1px dashed #1e4a7a;
             text-align: center;
-            color: #0088aa;
+            color: #4a7a9a;
             font-size: 14px;
-            line-height: 1.6;
+            line-height: 1.7;
+            border-radius: 4px;
         }
-        .placeholder-box .big { font-size: 40px; margin-bottom: 10px; }
+        .placeholder-box .big {
+            font-size: 44px;
+            margin-bottom: 12px;
+            opacity: 0.7;
+        }
 
-        /* ===== НИЖНЯЯ ПАНЕЛЬ НАВИГАЦИИ ===== */
+        /* ===== НИЖНЯЯ ПАНЕЛЬ ===== */
         .bottom-nav {
             position: fixed;
             bottom: 0;
             left: 0;
             right: 0;
-            height: 70px;
-            background: rgba(0, 10, 25, 0.95);
-            border-top: 1px solid #00ffff;
-            box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+            height: 68px;
+            background: rgba(8, 15, 28, 0.97);
+            border-top: 1px solid #1e4a7a;
             display: flex;
             justify-content: space-around;
             align-items: center;
@@ -206,7 +228,7 @@
             justify-content: center;
             background: transparent;
             border: none;
-            color: #006688;
+            color: #3a5a7a;
             font-family: 'Courier New', monospace;
             font-size: 10px;
             text-transform: uppercase;
@@ -217,66 +239,66 @@
             position: relative;
         }
         .nav-item .icon { font-size: 20px; }
-        .nav-item.active {
-            color: #00ffff;
-            text-shadow: 0 0 10px #00ffff;
-        }
+        .nav-item.active { color: #7ad7ff; }
         .nav-item.active::before {
             content: '';
             position: absolute;
             top: 0;
-            left: 20%;
-            right: 20%;
+            left: 25%;
+            right: 25%;
             height: 2px;
-            background: #00ffff;
-            box-shadow: 0 0 10px #00ffff;
+            background: #4aa8e8;
+            box-shadow: 0 0 8px #4aa8e8;
         }
-        .nav-item:hover {
-            color: #00ffff;
-        }
+        .nav-item:hover { color: #7ad7ff; }
     </style>
 </head>
 <body>
 
-    <!-- КНОПКА НАСТРОЕК -->
-    <button class="settings-btn" onclick="openSettings()">⚙️</button>
+    <!-- КНОПКА МЕНЮ (ТРИ ПОЛОСКИ) -->
+    <button class="menu-btn" onclick="openSettings()">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
 
-    <!-- ===== СТРАНИЦА: ГЛАВНАЯ (ИГРА) ===== -->
+    <!-- ===== ГЛАВНАЯ ===== -->
     <div class="page" id="page-home">
-        <h1>⚡ CYBER RPG ⚡</h1>
         <div class="level-box">
             <div class="level">Уровень <span id="lvl">1</span></div>
-            <div>Опыт: <span id="xp">0</span> / <span id="xpMax">100</span></div>
+            <div class="xp-text">Опыт: <span id="xp">0</span> / <span id="xpMax">100</span></div>
             <div class="xp-bar"><div class="xp-fill" id="xpFill"></div></div>
         </div>
+
         <div class="stats">
             <div class="stat"><div class="stat-name">💪 Сила</div><div class="stat-value" id="str">0</div></div>
             <div class="stat"><div class="stat-name">🧠 Интеллект</div><div class="stat-value" id="int">0</div></div>
             <div class="stat"><div class="stat-name">🧹 Порядок</div><div class="stat-value" id="clean">0</div></div>
             <div class="stat"><div class="stat-name">⚡ Энергия</div><div class="stat-value" id="energy">100</div></div>
         </div>
+
         <div class="actions">
             <button class="action-btn btn-sport" onclick="doAction('sport')">
-                <span>🏋️ Зарядка</span> <span>+10 STR / +20 XP</span>
+                <span>🏋️ Зарядка</span> <span class="reward">+10 STR / +20 XP</span>
             </button>
             <button class="action-btn btn-study" onclick="doAction('study')">
-                <span>📚 Учёба</span> <span>+10 INT / +25 XP</span>
+                <span>📚 Учёба</span> <span class="reward">+10 INT / +25 XP</span>
             </button>
             <button class="action-btn btn-clean" onclick="doAction('clean')">
-                <span>🧹 Уборка</span> <span>+10 ORD / +15 XP</span>
+                <span>🧹 Уборка</span> <span class="reward">+10 ORD / +15 XP</span>
             </button>
             <button class="action-btn btn-sleep" onclick="doAction('rest')">
-                <span>😴 Отдых</span> <span>+20 EN</span>
+                <span>😴 Отдых</span> <span class="reward">+20 EN</span>
             </button>
         </div>
     </div>
 
-    <!-- ===== СТРАНИЦА: ПРОФИЛЬ ===== -->
+    <!-- ===== ПРОФИЛЬ ===== -->
     <div class="page hidden" id="page-profile">
-        <div class="tab-title">👤 ПРОФИЛЬ</div>
+        <div class="tab-title">👤 Профиль</div>
         <div class="placeholder-box">
             <div class="big">👤</div>
-            Здесь будет информация о персонаже:<br>
+            Информация о персонаже:<br>
             • Имя<br>
             • Аватар<br>
             • Общий прогресс<br>
@@ -284,35 +306,33 @@
         </div>
     </div>
 
-    <!-- ===== СТРАНИЦА: КВЕСТЫ ===== -->
+    <!-- ===== КВЕСТЫ ===== -->
     <div class="page hidden" id="page-quests">
-        <div class="tab-title">📜 КВЕСТЫ</div>
+        <div class="tab-title">📜 Квесты</div>
         <div class="placeholder-box">
             <div class="big">📜</div>
-            Здесь будут ежедневные задания:<br>
-            • Сделай 20 отжиманий<br>
-            • Прочитай 10 страниц<br>
-            • Убери в комнате<br>
-            <br>
-            За выполнение — награда в XP
+            Ежедневные задания:<br>
+            • 20 отжиманий<br>
+            • Прочитать 10 страниц<br>
+            • Убрать комнату<br><br>
+            Награда — опыт
         </div>
     </div>
 
-    <!-- ===== СТРАНИЦА: НАСТРОЙКИ (заглушка) ===== -->
+    <!-- ===== СИСТЕМА (открывается только через кнопку меню) ===== -->
     <div class="page hidden" id="page-settings">
-        <div class="tab-title">⚙️ СИСТЕМА</div>
+        <div class="tab-title">⚙️ Система</div>
         <div class="placeholder-box">
             <div class="big">⚙️</div>
-            Системные функции:<br>
-            • Сброс прогресса<br>
+            Настройки:<br>
             • Смена темы<br>
             • Звук<br>
-            <br>
-            <button class="action-btn btn-sport" style="margin-top:15px;justify-content:center;" onclick="resetGame()">🗑️ СБРОСИТЬ ПРОГРЕСС</button>
+            • Сброс прогресса<br><br>
+            <button class="action-btn btn-sport" style="margin-top:20px; justify-content:center;" onclick="resetGame()">🗑️ СБРОСИТЬ ПРОГРЕСС</button>
         </div>
     </div>
 
-    <!-- ===== НИЖНЯЯ НАВИГАЦИЯ ===== -->
+    <!-- ===== НИЖНЯЯ НАВИГАЦИЯ (3 вкладки) ===== -->
     <div class="bottom-nav">
         <button class="nav-item active" onclick="switchTab('home', this)">
             <span class="icon">⚡</span>
@@ -325,10 +345,6 @@
         <button class="nav-item" onclick="switchTab('profile', this)">
             <span class="icon">👤</span>
             <span>Профиль</span>
-        </button>
-        <button class="nav-item" onclick="switchTab('settings', this)">
-            <span class="icon">⚙️</span>
-            <span>Система</span>
         </button>
     </div>
 
@@ -396,21 +412,20 @@
             }
         }
 
+        // Открытие настроек через кнопку с полосками
         function openSettings() {
-            switchTab('settings', document.querySelectorAll('.nav-item')[3]);
+            // Снимаем активность со всех вкладок нижней панели
+            document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+            switchTab('settings', null);
         }
 
-        // ===== ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК =====
         function switchTab(tabName, btn) {
-            // Скрываем все страницы
             document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
-            // Показываем нужную
             document.getElementById('page-' + tabName).classList.remove('hidden');
-            // Снимаем активность со всех кнопок
-            document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
-            // Активируем нажатую
-            if (btn) btn.classList.add('active');
-            // Прокручиваем вверх
+            if (btn) {
+                document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+            }
             window.scrollTo(0, 0);
         }
 
