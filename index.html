@@ -15,14 +15,103 @@
             align-items: center;
             min-height: 100vh;
             user-select: none;
+            background: #050810;
+            overflow-x: hidden;
+        }
 
+        /* ===== ФОН: НОЧНОЙ КИБЕРПАНК-ГОРОД ===== */
+        .city-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            overflow: hidden;
+            background: linear-gradient(180deg, #0a0e1a 0%, #0f1729 40%, #0a1520 70%, #050810 100%);
+        }
+
+        /* Здания на заднем плане */
+        .city-buildings {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 65%;
             background-image: 
-                linear-gradient(rgba(10, 15, 30, 0.75), rgba(5, 8, 15, 0.9)),
-                url('https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?w=1080&q=80');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            background-repeat: no-repeat;
+                /* Дальние здания */
+                linear-gradient(to top, #050810 0%, transparent 100%),
+                repeating-linear-gradient(90deg, 
+                    #0a1220 0px, #0a1220 40px, 
+                    transparent 40px, transparent 45px,
+                    #0d1628 45px, #0d1628 80px, 
+                    transparent 80px, transparent 85px,
+                    #081020 85px, #081020 130px, 
+                    transparent 130px, transparent 135px,
+                    #0a1424 135px, #0a1424 170px,
+                    transparent 170px, transparent 175px
+                );
+            background-size: 100% 100%, 100% 100%;
+            opacity: 0.9;
+        }
+
+        /* Окна в зданиях (светящиеся точки) */
+        .city-windows {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 65%;
+            background-image: 
+                radial-gradient(2px 2px at 50px 60%, #4aa8e8, transparent),
+                radial-gradient(2px 2px at 50px 70%, #7ad7ff, transparent),
+                radial-gradient(2px 2px at 50px 80%, #4aa8e8, transparent),
+                radial-gradient(2px 2px at 90px 65%, #7ad7ff, transparent),
+                radial-gradient(2px 2px at 90px 75%, #4aa8e8, transparent),
+                radial-gradient(2px 2px at 150px 55%, #7ad7ff, transparent),
+                radial-gradient(2px 2px at 150px 70%, #4aa8e8, transparent),
+                radial-gradient(2px 2px at 210px 60%, #7ad7ff, transparent),
+                radial-gradient(2px 2px at 210px 80%, #4aa8e8, transparent),
+                radial-gradient(2px 2px at 270px 68%, #7ad7ff, transparent),
+                radial-gradient(2px 2px at 330px 58%, #4aa8e8, transparent),
+                radial-gradient(2px 2px at 330px 78%, #7ad7ff, transparent),
+                radial-gradient(2px 2px at 30px 85%, #4aa8e8, transparent),
+                radial-gradient(2px 2px at 180px 88%, #7ad7ff, transparent),
+                radial-gradient(2px 2px at 300px 88%, #4aa8e8, transparent);
+            background-size: 400px 100%;
+            background-repeat: repeat-x;
+            animation: window-flicker 4s infinite;
+            opacity: 0.7;
+        }
+
+        @keyframes window-flicker {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Туман / дымка снизу */
+        .city-fog {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 40%;
+            background: linear-gradient(to top, rgba(10, 15, 30, 0.95) 0%, transparent 100%);
+            pointer-events: none;
+        }
+
+        /* Свечение от города (неоновая дымка) */
+        .city-glow {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 50%;
+            background: 
+                radial-gradient(ellipse at 30% 100%, rgba(74, 168, 232, 0.15) 0%, transparent 60%),
+                radial-gradient(ellipse at 70% 100%, rgba(155, 89, 182, 0.1) 0%, transparent 60%);
+            pointer-events: none;
         }
 
         /* ===== КНОПКА МЕНЮ ===== */
@@ -72,18 +161,17 @@
         }
         .page.hidden { display: none; }
 
-        /* Блок уровня и опыта */
         .level-box {
-            background: rgba(10, 20, 40, 0.85);
+            background: rgba(10, 20, 40, 0.8);
             border: 1px solid #1e4a7a;
-            box-shadow: 0 0 12px rgba(30, 120, 200, 0.15);
+            box-shadow: 0 0 20px rgba(30, 120, 200, 0.3), inset 0 0 20px rgba(30, 120, 200, 0.1);
             padding: 18px;
             width: 100%;
             max-width: 340px;
             text-align: center;
             margin-bottom: 25px;
             border-radius: 4px;
-            backdrop-filter: blur(5px);
+            backdrop-filter: blur(8px);
         }
         .level {
             font-size: 18px;
@@ -91,6 +179,7 @@
             font-weight: bold;
             letter-spacing: 2px;
             text-transform: uppercase;
+            text-shadow: 0 0 10px rgba(74, 168, 232, 0.5);
         }
         .xp-text {
             font-size: 13px;
@@ -108,52 +197,12 @@
         }
         .xp-fill {
             height: 100%;
-            background: linear-gradient(90deg, #1e6bb8, #4aa8e8);
+            background: linear-gradient(90deg, #1e6bb8, #4aa8e8, #7ad7ff);
             width: 0%;
             transition: width 0.4s;
             border-radius: 5px;
+            box-shadow: 0 0 10px #4aa8e8;
         }
-
-        /* Кнопки действий */
-        .actions {
-            width: 100%;
-            max-width: 340px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        .action-btn {
-            padding: 16px;
-            border: 1px solid #1e4a7a;
-            background: rgba(10, 20, 40, 0.75);
-            color: #7ad7ff;
-            font-family: 'Courier New', monospace;
-            font-size: 14px;
-            font-weight: bold;
-            letter-spacing: 1px;
-            cursor: pointer;
-            transition: all 0.2s;
-            text-align: left;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-radius: 4px;
-            backdrop-filter: blur(5px);
-        }
-        .action-btn:hover {
-            background: rgba(20, 50, 90, 0.9);
-            border-color: #4aa8e8;
-            box-shadow: 0 0 12px rgba(74, 168, 232, 0.25);
-        }
-        .action-btn:active { transform: scale(0.98); }
-        .action-btn .reward {
-            font-size: 11px;
-            color: #4a7a9a;
-        }
-        .btn-sport { border-left: 3px solid #e94560; }
-        .btn-study { border-left: 3px solid #4aa8e8; }
-        .btn-clean { border-left: 3px solid #9b59b6; }
-        .btn-sleep { border-left: 3px solid #16a085; }
 
         /* ===== ПРОФИЛЬ ===== */
         .profile-card {
@@ -164,8 +213,8 @@
             border-radius: 4px;
             padding: 25px 20px;
             text-align: center;
-            backdrop-filter: blur(5px);
-            box-shadow: 0 0 15px rgba(30, 120, 200, 0.2);
+            backdrop-filter: blur(8px);
+            box-shadow: 0 0 20px rgba(30, 120, 200, 0.3);
         }
         .avatar-wrapper {
             width: 110px;
@@ -174,7 +223,7 @@
             border-radius: 50%;
             padding: 3px;
             background: linear-gradient(135deg, #1e6bb8, #4aa8e8);
-            box-shadow: 0 0 20px rgba(74, 168, 232, 0.5);
+            box-shadow: 0 0 25px rgba(74, 168, 232, 0.6);
         }
         .avatar {
             width: 100%;
@@ -190,7 +239,7 @@
             color: #7ad7ff;
             letter-spacing: 1px;
             margin-bottom: 5px;
-            text-shadow: 0 0 10px rgba(74, 168, 232, 0.5);
+            text-shadow: 0 0 12px rgba(74, 168, 232, 0.6);
         }
         .profile-username {
             font-size: 13px;
@@ -216,25 +265,46 @@
             color: #7ad7ff;
             margin: 20px 0 25px;
             text-align: center;
+            text-shadow: 0 0 10px rgba(74, 168, 232, 0.5);
         }
         .placeholder-box {
             width: 100%;
             max-width: 340px;
             padding: 35px 20px;
-            background: rgba(10, 20, 40, 0.7);
+            background: rgba(10, 20, 40, 0.75);
             border: 1px dashed #1e4a7a;
             text-align: center;
             color: #4a7a9a;
             font-size: 14px;
             line-height: 1.7;
             border-radius: 4px;
-            backdrop-filter: blur(5px);
+            backdrop-filter: blur(8px);
         }
         .placeholder-box .big {
             font-size: 44px;
             margin-bottom: 12px;
             opacity: 0.7;
         }
+        .action-btn {
+            padding: 16px;
+            border: 1px solid #1e4a7a;
+            background: rgba(10, 20, 40, 0.8);
+            color: #7ad7ff;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-radius: 4px;
+            backdrop-filter: blur(8px);
+        }
+        .action-btn:hover {
+            background: rgba(20, 50, 90, 0.9);
+            border-color: #4aa8e8;
+            box-shadow: 0 0 12px rgba(74, 168, 232, 0.25);
+        }
+        .btn-sport { border-left: 3px solid #e94560; }
 
         /* ===== НИЖНЯЯ ПАНЕЛЬ ===== */
         .bottom-nav {
@@ -287,6 +357,14 @@
 </head>
 <body>
 
+    <!-- ФОН: НОЧНОЙ ГОРОД -->
+    <div class="city-bg">
+        <div class="city-glow"></div>
+        <div class="city-buildings"></div>
+        <div class="city-windows"></div>
+        <div class="city-fog"></div>
+    </div>
+
     <!-- КНОПКА МЕНЮ -->
     <button class="menu-btn" id="menuBtn" onclick="toggleSettings()">
         <span></span>
@@ -294,31 +372,29 @@
         <span></span>
     </button>
 
-    <!-- ===== ГЛАВНАЯ (только уровень + кнопки действий) ===== -->
+    <!-- ===== ГЛАВНАЯ ===== -->
     <div class="page" id="page-home">
         <div class="level-box">
             <div class="level">Уровень <span id="lvl">1</span></div>
             <div class="xp-text">Опыт: <span id="xp">0</span> / <span id="xpMax">100</span></div>
             <div class="xp-bar"><div class="xp-fill" id="xpFill"></div></div>
         </div>
+    </div>
 
-        <div class="actions">
-            <button class="action-btn btn-sport" onclick="doAction('sport')">
-                <span>🏋️ Зарядка</span> <span class="reward">+20 XP</span>
-            </button>
-            <button class="action-btn btn-study" onclick="doAction('study')">
-                <span>📚 Учёба</span> <span class="reward">+25 XP</span>
-            </button>
-            <button class="action-btn btn-clean" onclick="doAction('clean')">
-                <span>🧹 Уборка</span> <span class="reward">+15 XP</span>
-            </button>
-            <button class="action-btn btn-sleep" onclick="doAction('rest')">
-                <span>😴 Отдых</span> <span class="reward">+20 EN</span>
-            </button>
+    <!-- ===== КВЕСТЫ ===== -->
+    <div class="page hidden" id="page-quests">
+        <div class="tab-title">📜 Квесты</div>
+        <div class="placeholder-box">
+            <div class="big">📜</div>
+            Здесь появятся ежедневные задания:<br>
+            • 20 отжиманий<br>
+            • Прочитать 10 страниц<br>
+            • Убрать комнату<br><br>
+            Награда — опыт
         </div>
     </div>
 
-    <!-- ===== ПРОФИЛЬ (данные из Telegram) ===== -->
+    <!-- ===== ПРОФИЛЬ ===== -->
     <div class="page hidden" id="page-profile">
         <div class="profile-card">
             <div class="avatar-wrapper">
@@ -339,15 +415,19 @@
             • Смена темы<br>
             • Звук<br>
             • Сброс прогресса<br><br>
-            <button class="action-btn btn-sport" style="margin-top:20px; justify-content:center;" onclick="resetGame()">🗑️ СБРОСИТЬ ПРОГРЕСС</button>
+            <button class="action-btn btn-sport" style="margin-top:20px; width:100%;" onclick="resetGame()">🗑️ СБРОСИТЬ ПРОГРЕСС</button>
         </div>
     </div>
 
-    <!-- ===== НИЖНЯЯ НАВИГАЦИЯ (2 вкладки) ===== -->
+    <!-- ===== НИЖНЯЯ НАВИГАЦИЯ ===== -->
     <div class="bottom-nav">
         <button class="nav-item active" data-tab="home" onclick="switchTab('home', this)">
             <span class="icon">⚡</span>
             <span>Главная</span>
+        </button>
+        <button class="nav-item" data-tab="quests" onclick="switchTab('quests', this)">
+            <span class="icon">📜</span>
+            <span>Квесты</span>
         </button>
         <button class="nav-item" data-tab="profile" onclick="switchTab('profile', this)">
             <span class="icon">👤</span>
@@ -357,8 +437,7 @@
 
     <script>
         let data = {
-            level: 1, xp: 0, xpMax: 100,
-            energy: 100
+            level: 1, xp: 0, xpMax: 100
         };
 
         let lastTab = 'home';
@@ -376,19 +455,13 @@
             loadTelegramUser();
         }
 
-        // ===== ЗАГРУЗКА ДАННЫХ ИЗ TELEGRAM =====
         function loadTelegramUser() {
             if (window.Telegram && Telegram.WebApp && Telegram.WebApp.initDataUnsafe) {
                 const user = Telegram.WebApp.initDataUnsafe.user;
                 if (user) {
-                    // Имя
                     const fullName = (user.first_name || '') + (user.last_name ? ' ' + user.last_name : '');
                     document.getElementById('userName').innerText = fullName || 'Гость';
-                    
-                    // Юзернейм
                     document.getElementById('userUsername').innerText = user.username ? '@' + user.username : '@без_юзернейма';
-                    
-                    // Аватар
                     if (user.photo_url) {
                         document.getElementById('userAvatar').src = user.photo_url;
                     }
@@ -404,25 +477,6 @@
             }
         }
 
-        function doAction(type) {
-            if (type === 'sport') {
-                if (data.energy < 20) return alert("Мало энергии! Отдохни 😴");
-                data.xp += 20; data.energy -= 20;
-            }
-            if (type === 'study') { data.xp += 25; }
-            if (type === 'clean') { data.xp += 15; }
-            if (type === 'rest') { data.energy = Math.min(100, data.energy + 20); }
-
-            if (data.xp >= data.xpMax) {
-                data.level++;
-                data.xp -= data.xpMax;
-                data.xpMax = Math.floor(data.xpMax * 1.5);
-                alert("🎉 Новый уровень! Теперь ты " + data.level + " уровня!");
-            }
-            updateUI();
-            saveData();
-        }
-
         function updateUI() {
             document.getElementById('lvl').innerText = data.level;
             document.getElementById('xp').innerText = data.xp;
@@ -433,7 +487,7 @@
 
         function resetGame() {
             if (confirm("Сбросить весь прогресс?")) {
-                data = { level: 1, xp: 0, xpMax: 100, energy: 100 };
+                data = { level: 1, xp: 0, xpMax: 100 };
                 localStorage.removeItem('rpgData');
                 if (window.Telegram && Telegram.WebApp) Telegram.WebApp.CloudStorage.removeItem('rpgData');
                 updateUI();
