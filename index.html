@@ -103,7 +103,8 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+            justify-content: flex-start;
+            padding-top: 25px;
         }
 
         .card-label {
@@ -331,6 +332,10 @@
                 <span class="label">Уровень</span>
                 <span class="value" id="profileLvl">1</span>
             </div>
+            <div class="stats-row">
+                <span class="label">Квестов выполнено</span>
+                <span class="value" id="profileQuests">0</span>
+            </div>
         </div>
     </div>
 
@@ -374,7 +379,7 @@
             xp: 0, 
             xpMax: 100, 
             name: 'Гость',
-            questsDone: []  // массив выполненных квестов
+            questsDone: []
         };
         let lastTab = 'home';
 
@@ -415,12 +420,13 @@
             document.getElementById('topXp').innerText = data.xp;
             document.getElementById('topXpMax').innerText = data.xpMax;
             document.getElementById('profileLvl').innerText = data.level;
+            // Количество выполненных квестов
+            document.getElementById('profileQuests').innerText = data.questsDone.length;
             if (data.name) {
                 document.getElementById('topName').innerText = data.name;
             }
         }
 
-        // ===== ВЫПОЛНЕНИЕ КВЕСТА =====
         function completeQuest(questId) {
             if (data.questsDone.includes(questId)) {
                 alert('Этот квест уже выполнен!');
@@ -431,7 +437,6 @@
             data.questsDone.push(questId);
             data.xp += 50;
 
-            // Проверка на новый уровень
             if (data.xp >= data.xpMax) {
                 data.level++;
                 data.xp -= data.xpMax;
