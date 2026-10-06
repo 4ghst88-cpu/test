@@ -33,7 +33,6 @@
                 radial-gradient(ellipse at 100% 0%, rgba(0, 255, 255, 0.06) 0%, transparent 50%);
         }
 
-        /* ===== ВЕРХНЯЯ ПАНЕЛЬ ===== */
         .top-bar {
             position: fixed; top: 15px; left: 15px; right: 15px;
             display: flex; align-items: center; gap: 10px; z-index: 100;
@@ -79,16 +78,75 @@
         .badge .xp-mini { font-size: 10px; color: #4a7a9a; }
         .badge.hidden { display: none; }
 
+        .level-badge-wrap {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .level-badge-wrap.hidden { display: none; }
+        .level-badge-wrap .badge { width: 100%; }
+        .xp-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(10, 20, 40, 0.9);
+            border: 1px solid #1e4a7a;
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+        }
+        .xp-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #0088ff, #00ffff);
+            width: 0%;
+            transition: width 0.4s ease;
+            box-shadow: 0 0 10px #00ffff;
+            border-radius: 3px;
+        }
+
         .name-badge-clickable { cursor: pointer; }
         .name-badge-clickable:active { transform: scale(0.97); }
 
-        /* ===== ОСНОВНОЙ КОНТЕНТ ===== */
         .page {
             width: 100%; height: 100%; display: flex; flex-direction: column;
             align-items: center; justify-content: center;
             padding: 80px 20px 80px 20px; overflow: hidden;
         }
         .page.hidden { display: none; }
+
+        #page-quests {
+            justify-content: flex-start;
+            padding-top: 110px;
+            padding-bottom: 90px;
+            overflow-y: auto;
+            gap: 15px;
+        }
+        #page-quests::-webkit-scrollbar { width: 4px; }
+        #page-quests::-webkit-scrollbar-thumb { background: #1e4a7a; border-radius: 2px; }
+        #page-quests::-webkit-scrollbar-track { background: transparent; }
+
+        /* ===== СЧЁТЧИК НЕВЫПОЛНЕННЫХ КВЕСТОВ ===== */
+        .quests-counter {
+            width: 100%; max-width: 340px;
+            padding: 14px 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(8px);
+            flex-shrink: 0;
+        }
+        .quests-counter .label {
+            font-size: 12px;
+            color: #4a7a9a;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        .quests-counter .value {
+            font-size: 20px;
+            font-weight: bold;
+            color: #00ffff;
+            text-shadow: 0 0 8px rgba(0, 255, 255, 0.7);
+        }
 
         .card {
             width: 100%; max-width: 340px;
@@ -120,7 +178,6 @@
             margin-bottom: 25px;
         }
 
-        /* ===== СТАТИСТИКА: строки ===== */
         .stats-row {
             width: 100%;
             display: flex;
@@ -142,8 +199,11 @@
             color: #00ffff;
             text-shadow: 0 0 8px rgba(0, 255, 255, 0.7);
         }
+        .stats-row .value.danger {
+            color: #ff5588;
+            text-shadow: 0 0 8px rgba(255, 85, 136, 0.7);
+        }
 
-        /* ===== КВЕСТЫ ===== */
         .quest-card {
             width: 100%; max-width: 340px;
             padding: 20px;
@@ -151,7 +211,8 @@
             backdrop-filter: blur(8px);
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 12px;
+            flex-shrink: 0;
         }
         .quest-title {
             font-size: 16px;
@@ -165,13 +226,19 @@
             font-size: 12px;
             color: #4a7a9a;
             line-height: 1.6;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
         }
         .quest-reward {
             font-size: 13px;
             color: #ffcc00;
             text-shadow: 0 0 6px rgba(255, 204, 0, 0.5);
-            margin-bottom: 15px;
+            margin-bottom: 6px;
+        }
+        .quest-penalty {
+            font-size: 12px;
+            color: #ff5588;
+            text-shadow: 0 0 6px rgba(255, 85, 136, 0.5);
+            margin-bottom: 12px;
         }
         .quest-btn {
             width: 100%;
@@ -201,6 +268,15 @@
         .quest-btn.done:hover {
             border-color: #1e4a7a;
             box-shadow: none;
+        }
+
+        .quest-btn-refuse {
+            border-color: #4a1a2a;
+            color: #ff5588;
+        }
+        .quest-btn-refuse:hover {
+            border-color: #ff0055;
+            box-shadow: 0 0 15px rgba(255, 0, 85, 0.4);
         }
 
         .name-input {
@@ -256,7 +332,6 @@
         }
         .placeholder-box .big { font-size: 44px; margin-bottom: 12px; opacity: 0.7; }
 
-        /* ===== НИЖНЯЯ ПАНЕЛЬ ===== */
         .bottom-nav {
             position: fixed; bottom: 0; left: 0; right: 0; height: 68px;
             background: rgba(5, 10, 20, 0.97);
@@ -290,15 +365,19 @@
     <div class="grid-bg"></div>
     <div class="grid-glow"></div>
 
-    <!-- ===== ВЕРХНЯЯ ПАНЕЛЬ ===== -->
     <div class="top-bar">
         <button class="panel menu-btn" id="menuBtn" onclick="toggleSettings()">
             <span></span><span></span><span></span>
         </button>
-        <div class="panel badge" id="levelBadge">
-            <span class="label">Уровень</span>
-            <span class="value" id="topLvl">1</span>
-            <span class="xp-mini">(<span id="topXp">0</span>/<span id="topXpMax">100</span>)</span>
+        <div class="level-badge-wrap" id="levelBadge">
+            <div class="panel badge">
+                <span class="label">Уровень</span>
+                <span class="value" id="topLvl">1</span>
+                <span class="xp-mini">(<span id="topXp">0</span>/<span id="topXpMax">100</span>)</span>
+            </div>
+            <div class="xp-bar">
+                <div class="xp-fill" id="topXpFill"></div>
+            </div>
         </div>
         <div class="panel badge hidden name-badge-clickable" id="nameBadge" onclick="goToSettings()">
             <span class="label">Имя</span>
@@ -309,22 +388,42 @@
         </div>
     </div>
 
-    <!-- ===== ГЛАВНАЯ ===== -->
     <div class="page" id="page-home"></div>
 
-    <!-- ===== КВЕСТЫ ===== -->
     <div class="page hidden" id="page-quests">
+
+        <!-- Счётчик невыполненных квестов -->
+        <div class="panel quests-counter">
+            <span class="label">Невыполненных квестов</span>
+            <span class="value" id="questsLeft">2</span>
+        </div>
+
+        <!-- Квест 1 -->
         <div class="panel quest-card">
             <div>
                 <div class="quest-title">🏋️ 20 отжиманий</div>
                 <div class="quest-desc">Сделай 20 отжиманий за сегодня.</div>
-                <div class="quest-reward">+50 XP</div>
+                <div class="quest-reward">Награда: +100 XP</div>
+                <div class="quest-penalty">Штраф за отказ: −25 XP</div>
             </div>
             <button class="quest-btn" id="questBtn1" onclick="completeQuest(1)">Выполнить</button>
+            <button class="quest-btn quest-btn-refuse" id="questRefuseBtn1" onclick="refuseQuest(1)">Отказаться</button>
         </div>
+
+        <!-- Квест 2 -->
+        <div class="panel quest-card">
+            <div>
+                <div class="quest-title">📚 Прочитать 10 страниц</div>
+                <div class="quest-desc">Прочитай 10 страниц любой книги.</div>
+                <div class="quest-reward">Награда: +80 XP</div>
+                <div class="quest-penalty">Штраф за отказ: −20 XP</div>
+            </div>
+            <button class="quest-btn" id="questBtn2" onclick="completeQuest(2)">Выполнить</button>
+            <button class="quest-btn quest-btn-refuse" id="questRefuseBtn2" onclick="refuseQuest(2)">Отказаться</button>
+        </div>
+
     </div>
 
-    <!-- ===== ПРОФИЛЬ ===== -->
     <div class="page hidden" id="page-profile">
         <div class="panel card stats-card">
             <div class="stats-title">СТАТИСТИКА</div>
@@ -336,10 +435,13 @@
                 <span class="label">Квестов выполнено</span>
                 <span class="value" id="profileQuests">0</span>
             </div>
+            <div class="stats-row">
+                <span class="label">Квестов провалено</span>
+                <span class="value danger" id="profileQuestsFailed">0</span>
+            </div>
         </div>
     </div>
 
-    <!-- ===== СИСТЕМА ===== -->
     <div class="page hidden" id="page-settings">
         <div class="tab-title">СИСТЕМА</div>
         <div class="panel card">
@@ -360,7 +462,6 @@
         </div>
     </div>
 
-    <!-- ===== НИЖНЯЯ НАВИГАЦИЯ ===== -->
     <div class="bottom-nav" id="bottomNav">
         <button class="nav-item active" data-tab="home" onclick="switchTab('home', this)">
             <span class="icon">⬢</span><span>Главная</span>
@@ -379,20 +480,31 @@
             xp: 0, 
             xpMax: 100, 
             name: 'Гость',
-            questsDone: []
+            questsDone: [],
+            questsFailed: []
         };
         let lastTab = 'home';
+
+        const quests = {
+            1: { reward: 100, penalty: 25 },
+            2: { reward: 80, penalty: 20 }
+        };
+
+        // Всего квестов
+        const TOTAL_QUESTS = Object.keys(quests).length;
 
         function loadData() {
             const local = localStorage.getItem('rpgData');
             if (local) data = JSON.parse(local);
             if (!data.questsDone) data.questsDone = [];
+            if (!data.questsFailed) data.questsFailed = [];
             if (data.name) {
                 document.getElementById('nameInput').value = data.name;
                 document.getElementById('topName').innerText = data.name;
             }
             updateUI();
-            updateQuestButton();
+            updateAllQuestButtons();
+            updateQuestsCounter();
         }
 
         function saveData() {
@@ -420,11 +532,22 @@
             document.getElementById('topXp').innerText = data.xp;
             document.getElementById('topXpMax').innerText = data.xpMax;
             document.getElementById('profileLvl').innerText = data.level;
-            // Количество выполненных квестов
             document.getElementById('profileQuests').innerText = data.questsDone.length;
+            document.getElementById('profileQuestsFailed').innerText = data.questsFailed.length;
+            
+            const percent = (data.xp / data.xpMax) * 100;
+            document.getElementById('topXpFill').style.width = percent + '%';
+            
             if (data.name) {
                 document.getElementById('topName').innerText = data.name;
             }
+        }
+
+        // ===== СЧЁТЧИК НЕВЫПОЛНЕННЫХ КВЕСТОВ =====
+        function updateQuestsCounter() {
+            // Невыполненные = Всего − Выполнено − Провалено
+            const left = TOTAL_QUESTS - data.questsDone.length - data.questsFailed.length;
+            document.getElementById('questsLeft').innerText = left;
         }
 
         function completeQuest(questId) {
@@ -432,10 +555,15 @@
                 alert('Этот квест уже выполнен!');
                 return;
             }
+            if (data.questsFailed.includes(questId)) {
+                alert('Вы отказались от этого квеста!');
+                return;
+            }
             if (!confirm('Квест выполнен?')) return;
 
+            const reward = quests[questId].reward;
             data.questsDone.push(questId);
-            data.xp += 50;
+            data.xp += reward;
 
             if (data.xp >= data.xpMax) {
                 data.level++;
@@ -443,36 +571,85 @@
                 data.xpMax = Math.floor(data.xpMax * 1.5);
                 alert('🎉 Новый уровень! Теперь ты ' + data.level + ' уровня!');
             } else {
-                alert('✅ Квест выполнен! +50 XP');
+                alert('✅ Квест выполнен! +' + reward + ' XP');
             }
 
             updateUI();
-            updateQuestButton();
+            updateAllQuestButtons();
+            updateQuestsCounter();
             saveData();
         }
 
-        function updateQuestButton() {
-            const btn = document.getElementById('questBtn1');
-            if (data.questsDone.includes(1)) {
-                btn.innerText = '✓ ВЫПОЛНЕНО';
-                btn.classList.add('done');
-                btn.disabled = true;
+        function refuseQuest(questId) {
+            if (data.questsDone.includes(questId)) {
+                alert('Этот квест уже выполнен!');
+                return;
+            }
+            if (data.questsFailed.includes(questId)) {
+                alert('Вы уже отказались от этого квеста!');
+                return;
+            }
+            const penalty = quests[questId].penalty;
+            if (!confirm('Отказаться от квеста? Штраф: −' + penalty + ' XP')) return;
+
+            data.questsFailed.push(questId);
+            data.xp -= penalty;
+            if (data.xp < 0) data.xp = 0;
+
+            alert('❌ Квест провален. Штраф: −' + penalty + ' XP');
+
+            updateUI();
+            updateAllQuestButtons();
+            updateQuestsCounter();
+            saveData();
+        }
+
+        function updateAllQuestButtons() {
+            updateQuestButtons(1);
+            updateQuestButtons(2);
+        }
+
+        function updateQuestButtons(questId) {
+            const btnDone = document.getElementById('questBtn' + questId);
+            const btnRefuse = document.getElementById('questRefuseBtn' + questId);
+
+            const isDone = data.questsDone.includes(questId);
+            const isFailed = data.questsFailed.includes(questId);
+
+            if (isDone) {
+                btnDone.innerText = '✓ ВЫПОЛНЕНО';
+                btnDone.classList.add('done');
+                btnDone.disabled = true;
+                btnRefuse.style.display = 'none';
+            } else if (isFailed) {
+                btnDone.style.display = 'none';
+                btnRefuse.innerText = '✕ ПРОВАЛЕНО';
+                btnRefuse.disabled = true;
+                btnRefuse.style.opacity = '0.5';
+                btnRefuse.style.cursor = 'default';
             } else {
-                btn.innerText = 'ВЫПОЛНИТЬ';
-                btn.classList.remove('done');
-                btn.disabled = false;
+                btnDone.innerText = 'ВЫПОЛНИТЬ';
+                btnDone.classList.remove('done');
+                btnDone.disabled = false;
+                btnDone.style.display = 'block';
+                btnRefuse.innerText = 'ОТКАЗАТЬСЯ';
+                btnRefuse.disabled = false;
+                btnRefuse.style.display = 'block';
+                btnRefuse.style.opacity = '1';
+                btnRefuse.style.cursor = 'pointer';
             }
         }
 
         function resetGame() {
             if (confirm("Сбросить весь прогресс?")) {
-                data = { level: 1, xp: 0, xpMax: 100, name: 'Гость', questsDone: [] };
+                data = { level: 1, xp: 0, xpMax: 100, name: 'Гость', questsDone: [], questsFailed: [] };
                 localStorage.removeItem('rpgData');
                 if (window.Telegram && Telegram.WebApp) Telegram.WebApp.CloudStorage.removeItem('rpgData');
                 document.getElementById('nameInput').value = '';
                 document.getElementById('topName').innerText = 'Гость';
                 updateUI();
-                updateQuestButton();
+                updateAllQuestButtons();
+                updateQuestsCounter();
             }
         }
 
