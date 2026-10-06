@@ -76,7 +76,7 @@
         .profile-card {
             width: 100%; max-width: 340px;
             background: rgba(10, 20, 40, 0.8); border: 1px solid #00ffff;
-            border-radius: 0; padding: 25px 20px; text-align: center;
+            border-radius: 0; padding: 30px 20px; text-align: center;
             backdrop-filter: blur(8px);
             box-shadow: 0 0 15px rgba(0, 255, 255, 0.25), inset 0 0 15px rgba(0, 255, 255, 0.08);
             position: relative;
@@ -87,28 +87,70 @@
         }
         .profile-card::before { top: -2px; left: -2px; border-right: none; border-bottom: none; }
         .profile-card::after { bottom: -2px; right: -2px; border-left: none; border-top: none; }
-        .avatar-wrapper {
-            width: 110px; height: 110px; margin: 0 auto 18px;
-            border-radius: 50%; padding: 3px;
-            background: linear-gradient(135deg, #0088ff, #00ffff);
-            box-shadow: 0 0 25px rgba(0, 255, 255, 0.6);
+
+        .profile-label {
+            font-size: 12px;
+            color: #4a7a9a;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
         }
-        .avatar {
-            width: 100%; height: 100%; border-radius: 50%;
-            object-fit: cover; background: #0a1520; display: block;
+
+        .name-input {
+            width: 100%;
+            padding: 14px;
+            background: rgba(0, 20, 40, 0.9);
+            border: 1px solid #0088ff;
+            color: #00ffff;
+            font-family: 'Courier New', monospace;
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            letter-spacing: 1px;
+            outline: none;
+            transition: all 0.2s;
+            border-radius: 0;
+            margin-bottom: 15px;
         }
-        .profile-name {
-            font-size: 22px; font-weight: bold; color: #00ffff;
-            letter-spacing: 1px; margin-bottom: 5px; text-shadow: 0 0 12px #00ffff;
+        .name-input:focus {
+            border-color: #00ffff;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
         }
-        .profile-username { font-size: 13px; color: #4a7a9a; margin-bottom: 20px; }
+        .name-input::placeholder {
+            color: #3a5a7a;
+            font-weight: normal;
+        }
+
+        .save-name-btn {
+            padding: 10px 30px;
+            background: rgba(0, 136, 255, 0.2);
+            border: 1px solid #0088ff;
+            color: #00ffff;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-radius: 0;
+            margin-bottom: 25px;
+        }
+        .save-name-btn:hover {
+            background: rgba(0, 136, 255, 0.4);
+            border-color: #00ffff;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+        }
+        .save-name-btn:active { transform: scale(0.97); }
+
         .profile-level {
-            display: inline-block; padding: 8px 20px;
+            display: inline-block; padding: 10px 25px;
             background: rgba(0, 136, 255, 0.2); border: 1px solid #0088ff;
             border-radius: 0; font-size: 14px; color: #00ffff;
             letter-spacing: 2px; text-transform: uppercase;
             box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
         }
+
         .tab-title {
             font-size: 20px; text-transform: uppercase; letter-spacing: 3px;
             color: #00ffff; margin: 0 0 20px 0; text-align: center;
@@ -164,6 +206,7 @@
     <div class="grid-bg"></div>
     <div class="grid-glow"></div>
 
+    <!-- ===== ВЕРХНЯЯ ПАНЕЛЬ ===== -->
     <div class="top-bar">
         <button class="menu-btn" id="menuBtn" onclick="toggleSettings()">
             <span></span><span></span><span></span>
@@ -175,8 +218,10 @@
         </div>
     </div>
 
+    <!-- ===== ГЛАВНАЯ ===== -->
     <div class="page" id="page-home"></div>
 
+    <!-- ===== КВЕСТЫ ===== -->
     <div class="page hidden" id="page-quests">
         <div class="tab-title">КВЕСТЫ</div>
         <div class="placeholder-box">
@@ -189,17 +234,26 @@
         </div>
     </div>
 
+    <!-- ===== ПРОФИЛЬ ===== -->
     <div class="page hidden" id="page-profile">
         <div class="profile-card">
-            <div class="avatar-wrapper">
-                <img class="avatar" id="userAvatar" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='110' height='110'><rect width='110' height='110' fill='%230a1520'/><text x='50%' y='50%' font-size='40' fill='%234a7a9a' text-anchor='middle' dominant-baseline='central'>?</text></svg>" alt="Аватар">
-            </div>
-            <div class="profile-name" id="userName">Загрузка...</div>
-            <div class="profile-username" id="userUsername"></div>
+            <div class="profile-label">Имя персонажа</div>
+            <input 
+                type="text" 
+                class="name-input" 
+                id="nameInput" 
+                placeholder="Введите имя..." 
+                maxlength="20"
+                autocomplete="off"
+            >
+            <br>
+            <button class="save-name-btn" onclick="saveName()">Сохранить</button>
+            <br>
             <div class="profile-level">Уровень <span id="profileLvl">1</span></div>
         </div>
     </div>
 
+    <!-- ===== СИСТЕМА ===== -->
     <div class="page hidden" id="page-settings">
         <div class="tab-title">СИСТЕМА</div>
         <div class="placeholder-box">
@@ -212,6 +266,7 @@
         </div>
     </div>
 
+    <!-- ===== НИЖНЯЯ НАВИГАЦИЯ ===== -->
     <div class="bottom-nav" id="bottomNav">
         <button class="nav-item active" data-tab="home" onclick="switchTab('home', this)">
             <span class="icon">⬢</span><span>Главная</span>
@@ -225,71 +280,20 @@
     </div>
 
     <script>
-        let data = { level: 1, xp: 0, xpMax: 100 };
+        let data = { level: 1, xp: 0, xpMax: 100, name: '' };
         let lastTab = 'home';
 
-        // ===== ЗАГРУЗКА ДАННЫХ ИГРЫ =====
+        // ===== ЗАГРУЗКА ДАННЫХ =====
         function loadData() {
             const local = localStorage.getItem('rpgData');
-            if (local) data = JSON.parse(local);
-            if (window.Telegram && Telegram.WebApp) {
-                Telegram.WebApp.ready();
-                Telegram.WebApp.CloudStorage.getItem('rpgData', (err, value) => {
-                    if (value) { data = JSON.parse(value); updateUI(); }
-                });
+            if (local) {
+                data = JSON.parse(local);
+            }
+            // Если имя сохранено — показываем его в поле
+            if (data.name) {
+                document.getElementById('nameInput').value = data.name;
             }
             updateUI();
-        }
-
-        // ===== ЗАГРУЗКА ДАННЫХ ИЗ TELEGRAM =====
-        function loadTelegramUser() {
-            // Проверяем, есть ли Telegram WebApp
-            if (!window.Telegram || !Telegram.WebApp) {
-                document.getElementById('userName').innerText = 'Гость';
-                document.getElementById('userUsername').innerText = 'Откройте в Telegram';
-                return;
-            }
-
-            // Инициализация
-            Telegram.WebApp.ready();
-            Telegram.WebApp.expand();
-
-            // Пробуем получить данные
-            const tryLoad = () => {
-                const user = Telegram.WebApp.initDataUnsafe ? Telegram.WebApp.initDataUnsafe.user : null;
-                
-                if (user) {
-                    // Имя
-                    const fullName = (user.first_name || '') + (user.last_name ? ' ' + user.last_name : '');
-                    document.getElementById('userName').innerText = fullName.trim() || 'Без имени';
-                    
-                    // Юзернейм
-                    if (user.username) {
-                        document.getElementById('userUsername').innerText = '@' + user.username;
-                    } else {
-                        document.getElementById('userUsername').innerText = '@нет_юзернейма';
-                    }
-                    
-                    // Аватар
-                    if (user.photo_url) {
-                        document.getElementById('userAvatar').src = user.photo_url;
-                    } else {
-                        // Если фото нет — показываем первую букву имени
-                        const firstLetter = (user.first_name || '?')[0].toUpperCase();
-                        const svg = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='110' height='110'><rect width='110' height='110' fill='%230a1520'/><text x='50%' y='50%' font-size='50' fill='%2300ffff' text-anchor='middle' dominant-baseline='central'>" + firstLetter + "</text></svg>";
-                        document.getElementById('userAvatar').src = svg;
-                    }
-                    return true;
-                }
-                return false;
-            };
-
-            // Пробуем сразу
-            if (!tryLoad()) {
-                // Если данных нет — пробуем ещё раз через 500мс и через 1.5с
-                setTimeout(tryLoad, 500);
-                setTimeout(tryLoad, 1500);
-            }
         }
 
         function saveData() {
@@ -298,6 +302,18 @@
             if (window.Telegram && Telegram.WebApp) {
                 Telegram.WebApp.CloudStorage.setItem('rpgData', json);
             }
+        }
+
+        // ===== СОХРАНЕНИЕ ИМЕНИ =====
+        function saveName() {
+            const nameValue = document.getElementById('nameInput').value.trim();
+            if (nameValue === '') {
+                alert('Введите имя!');
+                return;
+            }
+            data.name = nameValue;
+            saveData();
+            alert('Имя сохранено: ' + nameValue);
         }
 
         function updateUI() {
@@ -309,9 +325,10 @@
 
         function resetGame() {
             if (confirm("Сбросить весь прогресс?")) {
-                data = { level: 1, xp: 0, xpMax: 100 };
+                data = { level: 1, xp: 0, xpMax: 100, name: '' };
                 localStorage.removeItem('rpgData');
                 if (window.Telegram && Telegram.WebApp) Telegram.WebApp.CloudStorage.removeItem('rpgData');
+                document.getElementById('nameInput').value = '';
                 updateUI();
             }
         }
@@ -373,11 +390,6 @@
         // Инициализация
         loadData();
         updateIcons();
-        
-        // Загружаем данные Telegram с небольшой задержкой (даём странице прогрузиться)
-        window.addEventListener('load', () => {
-            setTimeout(loadTelegramUser, 100);
-        });
     </script>
 
 </body>
