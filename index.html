@@ -38,14 +38,27 @@
             position: fixed; top: 15px; left: 15px; right: 15px;
             display: flex; align-items: center; gap: 10px; z-index: 100;
         }
+
+        /* ===== ЕДИНЫЙ СТИЛЬ ДЛЯ ВСЕХ ПАНЕЛЕЙ ===== */
+        .panel {
+            background: rgba(15, 30, 55, 0.9);
+            border: 1px solid #1e4a7a;
+            border-radius: 4px;
+            transition: all 0.2s;
+            overflow: hidden;
+            position: relative;
+        }
+        .panel:hover {
+            border-color: #00ffff;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.4);
+        }
+
         .menu-btn {
             flex-shrink: 0; width: 48px; height: 48px;
-            background: rgba(15, 30, 55, 0.9); border: 1px solid #1e4a7a;
             cursor: pointer; display: flex; flex-direction: column;
             align-items: center; justify-content: center; gap: 5px;
-            transition: all 0.2s; border-radius: 4px; padding: 0;
+            padding: 0;
         }
-        .menu-btn:hover { border-color: #00ffff; box-shadow: 0 0 15px rgba(0, 255, 255, 0.4); }
         .menu-btn:active { transform: scale(0.95); }
         .menu-btn span {
             display: block; width: 22px; height: 2px; background: #7ad7ff;
@@ -57,16 +70,10 @@
         .menu-btn.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
         .badge {
-            flex: 1;
-            height: 48px;
-            background: rgba(15, 30, 55, 0.9);
-            border: 1px solid #1e4a7a;
-            border-radius: 4px;
+            flex: 1; height: 48px;
             display: flex; align-items: center; justify-content: center;
             padding: 0 12px; gap: 6px;
-            transition: all 0.2s; overflow: hidden;
         }
-        .badge:hover { border-color: #00ffff; box-shadow: 0 0 15px rgba(0, 255, 255, 0.4); }
         .badge .label { font-size: 11px; color: #4a7a9a; text-transform: uppercase; letter-spacing: 1px; }
         .badge .value {
             font-size: 18px; font-weight: bold; color: #00ffff;
@@ -79,118 +86,87 @@
         .page {
             width: 100%; height: 100%; display: flex; flex-direction: column;
             align-items: center; justify-content: center;
-            padding: 90px 20px 90px 20px; overflow: hidden;
+            padding: 80px 20px 80px 20px; overflow: hidden;
         }
         .page.hidden { display: none; }
 
-        /* ===== СТАТИСТИКА (растянутая по высоте) ===== */
-        .stats-card {
+        /* ===== ОБЩИЙ СТИЛЬ КАРТОЧКИ ===== */
+        .card {
             width: 100%; max-width: 340px;
+            padding: 25px 20px;
+            text-align: center;
+            backdrop-filter: blur(8px);
+        }
+
+        .stats-card {
             height: 60vh;
             max-height: 550px;
-            background: rgba(10, 20, 40, 0.8);
-            border: 1px solid #00ffff;
-            border-radius: 0;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            text-align: center;
-            backdrop-filter: blur(8px);
-            box-shadow: 0 0 15px rgba(0, 255, 255, 0.25), inset 0 0 15px rgba(0, 255, 255, 0.08);
-            position: relative;
-            padding: 20px;
-        }
-        .stats-card::before, .stats-card::after {
-            content: ''; position: absolute; width: 12px; height: 12px;
-            border: 2px solid #00ffff; box-shadow: 0 0 8px #00ffff;
-        }
-        .stats-card::before { top: -2px; left: -2px; border-right: none; border-bottom: none; }
-        .stats-card::after { bottom: -2px; right: -2px; border-left: none; border-top: none; }
-
-        .stats-title {
-            font-size: 18px;
-            color: #00ffff;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            text-shadow: 0 0 10px #00ffff;
-            margin-bottom: 15px;
-        }
-        .stats-empty {
-            font-size: 12px;
-            color: #4a7a9a;
-            letter-spacing: 1px;
-            line-height: 1.6;
         }
 
-        /* ===== СИСТЕМА ===== */
-        .settings-card {
-            width: 100%; max-width: 340px;
-            background: rgba(10, 20, 40, 0.8); border: 1px solid #00ffff;
-            border-radius: 0; padding: 25px 20px; text-align: center;
-            backdrop-filter: blur(8px);
-            box-shadow: 0 0 15px rgba(0, 255, 255, 0.25), inset 0 0 15px rgba(0, 255, 255, 0.08);
-            position: relative;
-        }
-        .settings-card::before, .settings-card::after {
-            content: ''; position: absolute; width: 12px; height: 12px;
-            border: 2px solid #00ffff; box-shadow: 0 0 8px #00ffff;
-        }
-        .settings-card::before { top: -2px; left: -2px; border-right: none; border-bottom: none; }
-        .settings-card::after { bottom: -2px; right: -2px; border-left: none; border-top: none; }
-
-        .settings-label {
+        .card-label {
             font-size: 12px; color: #4a7a9a; text-transform: uppercase;
             letter-spacing: 2px; margin-bottom: 10px;
         }
 
+        .stats-title {
+            font-size: 16px;
+            color: #4a7a9a;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 20px;
+        }
+
+        .stats-empty {
+            font-size: 13px;
+            color: #3a5a7a;
+            letter-spacing: 1px;
+            line-height: 1.8;
+        }
+
+        /* ===== ПОЛЕ ВВОДА ===== */
         .name-input {
             width: 100%; padding: 14px;
-            background: rgba(0, 20, 40, 0.9); border: 1px solid #0088ff;
+            background: rgba(10, 20, 40, 0.9);
+            border: 1px solid #1e4a7a;
             color: #00ffff; font-family: 'Courier New', monospace;
             font-size: 18px; font-weight: bold; text-align: center;
             letter-spacing: 1px; outline: none; transition: all 0.2s;
-            border-radius: 0; margin-bottom: 12px;
+            border-radius: 4px; margin-bottom: 12px;
         }
         .name-input:focus { border-color: #00ffff; box-shadow: 0 0 15px rgba(0, 255, 255, 0.5); }
         .name-input::placeholder { color: #3a5a7a; font-weight: normal; }
 
-        .save-name-btn {
-            padding: 12px;
-            background: rgba(0, 136, 255, 0.2);
-            border: 1px solid #0088ff;
+        /* ===== КНОПКИ ===== */
+        .btn {
+            padding: 14px;
+            background: rgba(15, 30, 55, 0.9);
+            border: 1px solid #1e4a7a;
             color: #00ffff;
-            font-family: 'Courier New', monospace; font-size: 13px; font-weight: bold;
+            font-family: 'Courier New', monospace;
+            font-size: 13px; font-weight: bold;
             letter-spacing: 2px; text-transform: uppercase;
             cursor: pointer; transition: all 0.2s;
-            border-radius: 0; width: 100%; margin-bottom: 25px;
+            border-radius: 4px; width: 100%;
         }
-        .save-name-btn:hover {
-            background: rgba(0, 136, 255, 0.4); border-color: #00ffff;
-            box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+        .btn:hover {
+            border-color: #00ffff;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.4);
         }
-        .save-name-btn:active { transform: scale(0.97); }
+        .btn:active { transform: scale(0.97); }
+
+        .btn-danger { border-color: #4a1a2a; color: #ff5588; }
+        .btn-danger:hover { border-color: #ff0055; box-shadow: 0 0 15px rgba(255, 0, 85, 0.4); }
 
         .divider {
             width: 100%;
             height: 1px;
-            background: #004466;
+            background: #1e4a7a;
             margin: 20px 0;
         }
-
-        .action-btn {
-            padding: 14px; border: 1px solid #0088ff;
-            background: rgba(0, 30, 60, 0.8); color: #00ffff;
-            font-family: 'Courier New', monospace; font-size: 14px; font-weight: bold;
-            letter-spacing: 1px; cursor: pointer; transition: all 0.2s;
-            border-radius: 0; backdrop-filter: blur(8px); width: 100%;
-        }
-        .action-btn:hover {
-            background: rgba(0, 60, 120, 0.9); border-color: #00ffff;
-            box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
-        }
-        .btn-danger { border-color: #ff0055; color: #ff0055; }
-        .btn-danger:hover { border-color: #ff0055; color: #ff0055; box-shadow: 0 0 15px rgba(255, 0, 85, 0.5); }
 
         .tab-title {
             font-size: 20px; text-transform: uppercase; letter-spacing: 3px;
@@ -199,19 +175,21 @@
         }
         .placeholder-box {
             width: 100%; max-width: 340px; padding: 30px 20px;
-            background: rgba(10, 20, 40, 0.75); border: 1px dashed #004466;
+            background: rgba(15, 30, 55, 0.9);
+            border: 1px dashed #1e4a7a;
             text-align: center; color: #4a7a9a; font-size: 14px; line-height: 1.7;
-            border-radius: 0; backdrop-filter: blur(8px);
+            border-radius: 4px; backdrop-filter: blur(8px);
         }
         .placeholder-box .big { font-size: 44px; margin-bottom: 12px; opacity: 0.7; }
 
         /* ===== НИЖНЯЯ ПАНЕЛЬ ===== */
         .bottom-nav {
             position: fixed; bottom: 0; left: 0; right: 0; height: 68px;
-            background: rgba(5, 10, 20, 0.97); border-top: 1px solid #00ffff;
+            background: rgba(5, 10, 20, 0.97);
+            border-top: 1px solid #1e4a7a;
             display: flex; justify-content: space-around; align-items: center;
             z-index: 99; backdrop-filter: blur(10px);
-            box-shadow: 0 -5px 20px rgba(0, 255, 255, 0.15);
+            box-shadow: 0 -5px 20px rgba(0, 255, 255, 0.1);
             transition: transform 0.3s ease, opacity 0.3s ease;
         }
         .bottom-nav.hidden { transform: translateY(100%); opacity: 0; pointer-events: none; }
@@ -240,15 +218,15 @@
 
     <!-- ===== ВЕРХНЯЯ ПАНЕЛЬ ===== -->
     <div class="top-bar">
-        <button class="menu-btn" id="menuBtn" onclick="toggleSettings()">
+        <button class="panel menu-btn" id="menuBtn" onclick="toggleSettings()">
             <span></span><span></span><span></span>
         </button>
-        <div class="badge" id="levelBadge">
+        <div class="panel badge" id="levelBadge">
             <span class="label">Уровень</span>
             <span class="value" id="topLvl">1</span>
             <span class="xp-mini">(<span id="topXp">0</span>/<span id="topXpMax">100</span>)</span>
         </div>
-        <div class="badge hidden" id="nameBadge">
+        <div class="panel badge hidden" id="nameBadge">
             <span class="label">Имя</span>
             <span class="value" id="topName">Гость</span>
         </div>
@@ -270,9 +248,9 @@
         </div>
     </div>
 
-    <!-- ===== ПРОФИЛЬ ===== -->
+    <!-- ===== ПРОФИЛЬ (статистика) ===== -->
     <div class="page hidden" id="page-profile">
-        <div class="stats-card">
+        <div class="panel card stats-card">
             <div class="stats-title">СТАТИСТИКА</div>
             <div class="stats-empty">
                 Пока пусто...<br>
@@ -284,8 +262,8 @@
     <!-- ===== СИСТЕМА ===== -->
     <div class="page hidden" id="page-settings">
         <div class="tab-title">СИСТЕМА</div>
-        <div class="settings-card">
-            <div class="settings-label">Имя персонажа</div>
+        <div class="panel card">
+            <div class="card-label">Имя персонажа</div>
             <input 
                 type="text" 
                 class="name-input" 
@@ -294,11 +272,11 @@
                 maxlength="20"
                 autocomplete="off"
             >
-            <button class="save-name-btn" onclick="saveName()">Сохранить имя</button>
+            <button class="btn" onclick="saveName()">Сохранить имя</button>
 
             <div class="divider"></div>
 
-            <button class="action-btn btn-danger" onclick="resetGame()">⬡ СБРОСИТЬ ПРОГРЕСС</button>
+            <button class="btn btn-danger" onclick="resetGame()">⬡ СБРОСИТЬ ПРОГРЕСС</button>
         </div>
     </div>
 
@@ -321,9 +299,7 @@
 
         function loadData() {
             const local = localStorage.getItem('rpgData');
-            if (local) {
-                data = JSON.parse(local);
-            }
+            if (local) data = JSON.parse(local);
             if (data.name) {
                 document.getElementById('nameInput').value = data.name;
                 document.getElementById('topName').innerText = data.name;
