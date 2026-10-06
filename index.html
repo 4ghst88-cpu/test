@@ -7,8 +7,11 @@
     <style>
         * { box-sizing: border-box; }
         html, body {
-            height: 100%; overflow: hidden; position: fixed; width: 100%;
-            margin: 0; padding: 0; overscroll-behavior: none; touch-action: manipulation;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overscroll-behavior: none;
+            touch-action: manipulation;
         }
         body {
             font-family: 'Courier New', monospace;
@@ -107,25 +110,26 @@
         .name-badge-clickable { cursor: pointer; }
         .name-badge-clickable:active { transform: scale(0.97); }
 
+        /* ===== ОСНОВНОЙ КОНТЕНТ (С ПРОКРУТКОЙ) ===== */
         .page {
-            width: 100%; height: 100%; display: flex; flex-direction: column;
-            align-items: center; justify-content: center;
-            padding: 80px 20px 80px 20px; overflow: hidden;
+            width: 100%;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 100px 20px 100px 20px;
+            gap: 15px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            -webkit-overflow-scrolling: touch;
         }
         .page.hidden { display: none; }
+        .page::-webkit-scrollbar { width: 4px; }
+        .page::-webkit-scrollbar-thumb { background: #1e4a7a; border-radius: 2px; }
+        .page::-webkit-scrollbar-track { background: transparent; }
 
-        #page-quests {
-            justify-content: flex-start;
-            padding-top: 110px;
-            padding-bottom: 90px;
-            overflow-y: auto;
-            gap: 12px;
-        }
-        #page-quests::-webkit-scrollbar { width: 4px; }
-        #page-quests::-webkit-scrollbar-thumb { background: #1e4a7a; border-radius: 2px; }
-        #page-quests::-webkit-scrollbar-track { background: transparent; }
-
-        /* ===== ПЛАШКА-СЕКЦИЯ (кликабельная) ===== */
+        /* ===== ПЛАШКА-СЕКЦИЯ ===== */
         .quests-section {
             width: 100%; max-width: 340px;
             padding: 14px 18px;
@@ -167,7 +171,7 @@
             text-shadow: 0 0 8px rgba(255, 85, 136, 0.7);
         }
 
-        /* ===== СПИСОК КВЕСТОВ (СВОРАЧИВАЕМЫЙ) ===== */
+        /* ===== СПИСКИ КВЕСТОВ ===== */
         .quests-list {
             width: 100%;
             max-width: 340px;
@@ -176,11 +180,12 @@
             gap: 12px;
             overflow: hidden;
             transition: max-height 0.4s ease, opacity 0.3s ease;
-            max-height: 2000px;
+            max-height: none;
             opacity: 1;
+            flex-shrink: 0;
         }
         .quests-list.collapsed {
-            max-height: 0;
+            max-height: 0 !important;
             opacity: 0;
             pointer-events: none;
         }
@@ -190,16 +195,17 @@
             padding: 25px 20px;
             text-align: center;
             backdrop-filter: blur(8px);
+            flex-shrink: 0;
         }
 
         .stats-card {
-            height: 60vh;
-            max-height: 550px;
+            min-height: 60vh;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: flex-start;
             padding-top: 25px;
+            flex-shrink: 0;
         }
 
         .card-label {
@@ -316,7 +322,6 @@
             box-shadow: 0 0 15px rgba(255, 0, 85, 0.4);
         }
 
-        /* Проваленный квест — приглушённые цвета */
         .quest-card.failed {
             border-color: #4a1a2a;
             opacity: 0.7;
@@ -326,7 +331,6 @@
             text-shadow: 0 0 8px rgba(255, 85, 136, 0.5);
         }
 
-        /* Выполненный квест — приглушённые цвета */
         .quest-card.done-card {
             border-color: #1e4a7a;
             opacity: 0.6;
@@ -457,7 +461,6 @@
 
     <div class="page hidden" id="page-quests">
 
-        <!-- ===== СЕКЦИЯ 1: НЕВЫПОЛНЕННЫЕ ===== -->
         <div class="panel quests-section" id="sectionActive" onclick="toggleSection('active')">
             <span class="label">
                 <span class="arrow">▼</span>
@@ -465,33 +468,8 @@
             </span>
             <span class="value" id="questsLeft">2</span>
         </div>
-        <div class="quests-list" id="listActive">
-            <!-- Квест 1 -->
-            <div class="panel quest-card">
-                <div>
-                    <div class="quest-title">🏋️ 20 отжиманий</div>
-                    <div class="quest-desc">Сделай 20 отжиманий за сегодня.</div>
-                    <div class="quest-reward">Награда: +100 XP</div>
-                    <div class="quest-penalty">Штраф за отказ: −25 XP</div>
-                </div>
-                <button class="quest-btn" id="questBtn1" onclick="completeQuest(1)">Выполнить</button>
-                <button class="quest-btn quest-btn-refuse" id="questRefuseBtn1" onclick="refuseQuest(1)">Отказаться</button>
-            </div>
-            <!-- Квест 2 -->
-            <div class="panel quest-card">
-                <div>
-                    <div class="quest-title">📚 Прочитать 10 страниц</div>
-                    <div class="quest-desc">Прочитай 10 страниц любой книги.</div>
-                    <div class="quest-reward">Награда: +80 XP</div>
-                    <div class="quest-penalty">Штраф за отказ: −20 XP</div>
-                </div>
-                <button class="quest-btn" id="questBtn2" onclick="completeQuest(2)">Выполнить</button>
-                <button class="quest-btn quest-btn-refuse" id="questRefuseBtn2" onclick="refuseQuest(2)">Отказаться</button>
-            </div>
-            <div class="empty-text" id="emptyActive" style="display:none;">Все квесты разобраны</div>
-        </div>
+        <div class="quests-list" id="listActive"></div>
 
-        <!-- ===== СЕКЦИЯ 2: ВЫПОЛНЕННЫЕ ===== -->
         <div class="panel quests-section" id="sectionDone" onclick="toggleSection('done')">
             <span class="label">
                 <span class="arrow">▼</span>
@@ -499,11 +477,8 @@
             </span>
             <span class="value" id="questsDoneCount">0</span>
         </div>
-        <div class="quests-list" id="listDone">
-            <div class="empty-text">Пока ничего не выполнено</div>
-        </div>
+        <div class="quests-list" id="listDone"></div>
 
-        <!-- ===== СЕКЦИЯ 3: ПРОВАЛЕННЫЕ ===== -->
         <div class="panel quests-section" id="sectionFailed" onclick="toggleSection('failed')">
             <span class="label">
                 <span class="arrow">▼</span>
@@ -511,9 +486,7 @@
             </span>
             <span class="value danger" id="questsFailedCount">0</span>
         </div>
-        <div class="quests-list" id="listFailed">
-            <div class="empty-text">Пока ничего не провалено</div>
-        </div>
+        <div class="quests-list" id="listFailed"></div>
 
     </div>
 
@@ -579,20 +552,9 @@
         let lastTab = 'home';
 
         const quests = {
-            1: { 
-                title: '🏋️ 20 отжиманий', 
-                desc: 'Сделай 20 отжиманий за сегодня.', 
-                reward: 100, 
-                penalty: 25 
-            },
-            2: { 
-                title: '📚 Прочитать 10 страниц', 
-                desc: 'Прочитай 10 страниц любой книги.', 
-                reward: 80, 
-                penalty: 20 
-            }
+            1: { title: '🏋️ 20 отжиманий', desc: 'Сделай 20 отжиманий за сегодня.', reward: 100, penalty: 25 },
+            2: { title: '📚 Прочитать 10 страниц', desc: 'Прочитай 10 страниц любой книги.', reward: 80, penalty: 20 }
         };
-        const TOTAL_QUESTS = Object.keys(quests).length;
 
         function loadData() {
             const local = localStorage.getItem('rpgData');
@@ -617,10 +579,7 @@
 
         function saveName() {
             const nameValue = document.getElementById('nameInput').value.trim();
-            if (nameValue === '') {
-                alert('Введите имя!');
-                return;
-            }
+            if (nameValue === '') { alert('Введите имя!'); return; }
             data.name = nameValue;
             document.getElementById('topName').innerText = nameValue;
             saveData();
@@ -643,18 +602,15 @@
             }
         }
 
-        // ===== ПЕРЕСТРОЕНИЕ СПИСКА КВЕСТОВ =====
         function updateQuestsView() {
             const listActive = document.getElementById('listActive');
             const listDone = document.getElementById('listDone');
             const listFailed = document.getElementById('listFailed');
 
-            // Очищаем списки
             listActive.innerHTML = '';
             listDone.innerHTML = '';
             listFailed.innerHTML = '';
 
-            // --- Активные (невыполненные и непроваленные) ---
             let activeCount = 0;
             Object.keys(quests).forEach(id => {
                 const qid = parseInt(id);
@@ -674,7 +630,6 @@
             }
             document.getElementById('questsLeft').innerText = activeCount;
 
-            // --- Выполненные ---
             if (data.questsDone.length === 0) {
                 const empty = document.createElement('div');
                 empty.className = 'empty-text';
@@ -687,7 +642,6 @@
             }
             document.getElementById('questsDoneCount').innerText = data.questsDone.length;
 
-            // --- Проваленные ---
             if (data.questsFailed.length === 0) {
                 const empty = document.createElement('div');
                 empty.className = 'empty-text';
@@ -701,7 +655,6 @@
             document.getElementById('questsFailedCount').innerText = data.questsFailed.length;
         }
 
-        // ===== СОЗДАНИЕ КАРТОЧКИ КВЕСТА =====
         function createQuestCard(questId, type) {
             const q = quests[questId];
             const card = document.createElement('div');
@@ -733,7 +686,6 @@
             return card;
         }
 
-        // ===== СВОРАЧИВАНИЕ СЕКЦИЙ =====
         function toggleSection(name) {
             const section = document.getElementById('section' + capitalize(name));
             const list = document.getElementById('list' + capitalize(name));
@@ -890,6 +842,10 @@
             }
 
             updateIcons();
+            
+            // Прокрутка вверх при переключении вкладки
+            const currentPage = document.getElementById('page-' + tabName);
+            if (currentPage) currentPage.scrollTop = 0;
         }
 
         function updateIcons() {
