@@ -14,19 +14,56 @@
             background-size: 20px 20px;
             color: #00ffff;
             margin: 0;
-            padding: 20px;
+            padding: 0 0 80px 0; /* отступ снизу под панель */
             display: flex;
             flex-direction: column;
             align-items: center;
             min-height: 100vh;
             user-select: none;
+            position: relative;
         }
+
+        /* ===== КНОПКА НАСТРОЕК ===== */
+        .settings-btn {
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            width: 42px;
+            height: 42px;
+            background: rgba(0, 20, 40, 0.9);
+            border: 1px solid #00ffff;
+            color: #00ffff;
+            font-size: 22px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.4), inset 0 0 10px rgba(0, 255, 255, 0.1);
+            transition: all 0.2s;
+            z-index: 100;
+        }
+        .settings-btn:hover {
+            background: rgba(0, 60, 120, 0.9);
+            box-shadow: 0 0 20px #00ffff;
+            transform: rotate(90deg);
+        }
+
+        /* ===== ОСНОВНОЙ КОНТЕНТ ===== */
+        .page {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 20px;
+        }
+        .page.hidden { display: none; }
+
         h1 {
             font-size: 24px;
             text-transform: uppercase;
             letter-spacing: 3px;
             text-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff;
-            margin: 10px 0 20px;
+            margin: 40px 0 20px;
             animation: flicker 3s infinite;
         }
         @keyframes flicker {
@@ -36,22 +73,12 @@
         .level-box {
             background: rgba(0, 20, 40, 0.8);
             border: 1px solid #00ffff;
-            box-shadow: 0 0 15px rgba(0, 255, 255, 0.3), inset 0 0 15px rgba(0, 255, 255, 0.1);
-            border-radius: 0;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
             padding: 15px;
             width: 100%;
             max-width: 350px;
             text-align: center;
             margin-bottom: 20px;
-            position: relative;
-        }
-        .level-box::before {
-            content: '';
-            position: absolute;
-            top: -2px; left: -2px; right: -2px; bottom: -2px;
-            border: 1px solid #00ffff;
-            opacity: 0.5;
-            pointer-events: none;
         }
         .level {
             font-size: 20px;
@@ -68,7 +95,6 @@
             border: 1px solid #004466;
             overflow: hidden;
             margin-top: 10px;
-            position: relative;
         }
         .xp-fill {
             height: 100%;
@@ -101,18 +127,9 @@
             border-top: 2px solid #00ffff;
             border-left: 2px solid #00ffff;
         }
-        .stat-name {
-            font-size: 11px;
-            color: #0088aa;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        .stat-value {
-            font-size: 22px;
-            font-weight: bold;
-            color: #00ffff;
-            text-shadow: 0 0 8px #00ffff;
-        }
+        .stat-name { font-size: 11px; color: #0088aa; text-transform: uppercase; }
+        .stat-value { font-size: 22px; font-weight: bold; color: #00ffff; text-shadow: 0 0 8px #00ffff; }
+
         .actions {
             width: 100%;
             max-width: 350px;
@@ -129,79 +146,191 @@
             font-size: 15px;
             font-weight: bold;
             text-transform: uppercase;
-            letter-spacing: 1px;
             cursor: pointer;
             transition: all 0.2s;
             text-align: left;
             display: flex;
             justify-content: space-between;
             box-shadow: 0 0 8px rgba(0, 136, 255, 0.3);
-            position: relative;
         }
-        .action-btn:hover {
-            background: rgba(0, 60, 120, 0.9);
-            box-shadow: 0 0 20px rgba(0, 255, 255, 0.6);
-            border-color: #00ffff;
-        }
-        .action-btn:active {
-            transform: scale(0.98);
-            box-shadow: 0 0 30px #00ffff;
-        }
+        .action-btn:hover { background: rgba(0, 60, 120, 0.9); box-shadow: 0 0 20px rgba(0, 255, 255, 0.6); border-color: #00ffff; }
+        .action-btn:active { transform: scale(0.98); }
         .btn-sport { border-left: 4px solid #ff0055; }
         .btn-study { border-left: 4px solid #0088ff; }
         .btn-clean { border-left: 4px solid #aa00ff; }
         .btn-sleep { border-left: 4px solid #00ffaa; }
-        
-        .reset-btn {
-            margin-top: 20px;
-            padding: 8px 20px;
-            background: transparent;
-            border: 1px solid #004466;
-            color: #0088aa;
-            font-family: 'Courier New', monospace;
-            font-size: 12px;
+
+        /* ===== ВКЛАДКИ (контент) ===== */
+        .tab-title {
+            font-size: 22px;
             text-transform: uppercase;
-            cursor: pointer;
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px #00ffff;
+            margin: 30px 0 20px;
         }
-        .reset-btn:hover {
-            border-color: #ff0055;
-            color: #ff0055;
+        .placeholder-box {
+            width: 100%;
+            max-width: 350px;
+            padding: 30px 20px;
+            background: rgba(0, 20, 40, 0.6);
+            border: 1px dashed #004466;
+            text-align: center;
+            color: #0088aa;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        .placeholder-box .big { font-size: 40px; margin-bottom: 10px; }
+
+        /* ===== НИЖНЯЯ ПАНЕЛЬ НАВИГАЦИИ ===== */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 70px;
+            background: rgba(0, 10, 25, 0.95);
+            border-top: 1px solid #00ffff;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            z-index: 99;
+            backdrop-filter: blur(10px);
+        }
+        .nav-item {
+            flex: 1;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            border: none;
+            color: #006688;
+            font-family: 'Courier New', monospace;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.2s;
+            gap: 4px;
+            position: relative;
+        }
+        .nav-item .icon { font-size: 20px; }
+        .nav-item.active {
+            color: #00ffff;
+            text-shadow: 0 0 10px #00ffff;
+        }
+        .nav-item.active::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 20%;
+            right: 20%;
+            height: 2px;
+            background: #00ffff;
+            box-shadow: 0 0 10px #00ffff;
+        }
+        .nav-item:hover {
+            color: #00ffff;
         }
     </style>
 </head>
 <body>
 
-    <h1>⚡ CYBER RPG ⚡</h1>
+    <!-- КНОПКА НАСТРОЕК -->
+    <button class="settings-btn" onclick="openSettings()">⚙️</button>
 
-    <div class="level-box">
-        <div class="level">Уровень <span id="lvl">1</span></div>
-        <div>Опыт: <span id="xp">0</span> / <span id="xpMax">100</span></div>
-        <div class="xp-bar"><div class="xp-fill" id="xpFill"></div></div>
+    <!-- ===== СТРАНИЦА: ГЛАВНАЯ (ИГРА) ===== -->
+    <div class="page" id="page-home">
+        <h1>⚡ CYBER RPG ⚡</h1>
+        <div class="level-box">
+            <div class="level">Уровень <span id="lvl">1</span></div>
+            <div>Опыт: <span id="xp">0</span> / <span id="xpMax">100</span></div>
+            <div class="xp-bar"><div class="xp-fill" id="xpFill"></div></div>
+        </div>
+        <div class="stats">
+            <div class="stat"><div class="stat-name">💪 Сила</div><div class="stat-value" id="str">0</div></div>
+            <div class="stat"><div class="stat-name">🧠 Интеллект</div><div class="stat-value" id="int">0</div></div>
+            <div class="stat"><div class="stat-name">🧹 Порядок</div><div class="stat-value" id="clean">0</div></div>
+            <div class="stat"><div class="stat-name">⚡ Энергия</div><div class="stat-value" id="energy">100</div></div>
+        </div>
+        <div class="actions">
+            <button class="action-btn btn-sport" onclick="doAction('sport')">
+                <span>🏋️ Зарядка</span> <span>+10 STR / +20 XP</span>
+            </button>
+            <button class="action-btn btn-study" onclick="doAction('study')">
+                <span>📚 Учёба</span> <span>+10 INT / +25 XP</span>
+            </button>
+            <button class="action-btn btn-clean" onclick="doAction('clean')">
+                <span>🧹 Уборка</span> <span>+10 ORD / +15 XP</span>
+            </button>
+            <button class="action-btn btn-sleep" onclick="doAction('rest')">
+                <span>😴 Отдых</span> <span>+20 EN</span>
+            </button>
+        </div>
     </div>
 
-    <div class="stats">
-        <div class="stat"><div class="stat-name">💪 Сила</div><div class="stat-value" id="str">0</div></div>
-        <div class="stat"><div class="stat-name">🧠 Интеллект</div><div class="stat-value" id="int">0</div></div>
-        <div class="stat"><div class="stat-name">🧹 Порядок</div><div class="stat-value" id="clean">0</div></div>
-        <div class="stat"><div class="stat-name">⚡ Энергия</div><div class="stat-value" id="energy">100</div></div>
+    <!-- ===== СТРАНИЦА: ПРОФИЛЬ ===== -->
+    <div class="page hidden" id="page-profile">
+        <div class="tab-title">👤 ПРОФИЛЬ</div>
+        <div class="placeholder-box">
+            <div class="big">👤</div>
+            Здесь будет информация о персонаже:<br>
+            • Имя<br>
+            • Аватар<br>
+            • Общий прогресс<br>
+            • Достижения
+        </div>
     </div>
 
-    <div class="actions">
-        <button class="action-btn btn-sport" onclick="doAction('sport')">
-            <span>🏋️ Зарядка</span> <span>+10 STR / +20 XP</span>
-        </button>
-        <button class="action-btn btn-study" onclick="doAction('study')">
-            <span>📚 Учёба</span> <span>+10 INT / +25 XP</span>
-        </button>
-        <button class="action-btn btn-clean" onclick="doAction('clean')">
-            <span>🧹 Уборка</span> <span>+10 ORD / +15 XP</span>
-        </button>
-        <button class="action-btn btn-sleep" onclick="doAction('rest')">
-            <span>😴 Отдых</span> <span>+20 EN</span>
-        </button>
+    <!-- ===== СТРАНИЦА: КВЕСТЫ ===== -->
+    <div class="page hidden" id="page-quests">
+        <div class="tab-title">📜 КВЕСТЫ</div>
+        <div class="placeholder-box">
+            <div class="big">📜</div>
+            Здесь будут ежедневные задания:<br>
+            • Сделай 20 отжиманий<br>
+            • Прочитай 10 страниц<br>
+            • Убери в комнате<br>
+            <br>
+            За выполнение — награда в XP
+        </div>
     </div>
 
-    <button class="reset-btn" onclick="resetGame()">Сбросить прогресс</button>
+    <!-- ===== СТРАНИЦА: НАСТРОЙКИ (заглушка) ===== -->
+    <div class="page hidden" id="page-settings">
+        <div class="tab-title">⚙️ СИСТЕМА</div>
+        <div class="placeholder-box">
+            <div class="big">⚙️</div>
+            Системные функции:<br>
+            • Сброс прогресса<br>
+            • Смена темы<br>
+            • Звук<br>
+            <br>
+            <button class="action-btn btn-sport" style="margin-top:15px;justify-content:center;" onclick="resetGame()">🗑️ СБРОСИТЬ ПРОГРЕСС</button>
+        </div>
+    </div>
+
+    <!-- ===== НИЖНЯЯ НАВИГАЦИЯ ===== -->
+    <div class="bottom-nav">
+        <button class="nav-item active" onclick="switchTab('home', this)">
+            <span class="icon">⚡</span>
+            <span>Главная</span>
+        </button>
+        <button class="nav-item" onclick="switchTab('quests', this)">
+            <span class="icon">📜</span>
+            <span>Квесты</span>
+        </button>
+        <button class="nav-item" onclick="switchTab('profile', this)">
+            <span class="icon">👤</span>
+            <span>Профиль</span>
+        </button>
+        <button class="nav-item" onclick="switchTab('settings', this)">
+            <span class="icon">⚙️</span>
+            <span>Система</span>
+        </button>
+    </div>
 
     <script>
         let data = {
@@ -212,7 +341,6 @@
         function loadData() {
             const local = localStorage.getItem('rpgData');
             if (local) data = JSON.parse(local);
-
             if (window.Telegram && Telegram.WebApp) {
                 Telegram.WebApp.ready();
                 Telegram.WebApp.CloudStorage.getItem('rpgData', (err, value) => {
@@ -238,7 +366,6 @@
             if (type === 'study') { data.int += 10; data.xp += 25; }
             if (type === 'clean') { data.clean += 10; data.xp += 15; }
             if (type === 'rest') { data.energy = Math.min(100, data.energy + 20); }
-
             if (data.xp >= data.xpMax) {
                 data.level++;
                 data.xp -= data.xpMax;
@@ -257,8 +384,7 @@
             document.getElementById('int').innerText = data.int;
             document.getElementById('clean').innerText = data.clean;
             document.getElementById('energy').innerText = data.energy;
-            const percent = (data.xp / data.xpMax) * 100;
-            document.getElementById('xpFill').style.width = percent + '%';
+            document.getElementById('xpFill').style.width = (data.xp / data.xpMax) * 100 + '%';
         }
 
         function resetGame() {
@@ -268,6 +394,24 @@
                 if (window.Telegram && Telegram.WebApp) Telegram.WebApp.CloudStorage.removeItem('rpgData');
                 updateUI();
             }
+        }
+
+        function openSettings() {
+            switchTab('settings', document.querySelectorAll('.nav-item')[3]);
+        }
+
+        // ===== ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК =====
+        function switchTab(tabName, btn) {
+            // Скрываем все страницы
+            document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
+            // Показываем нужную
+            document.getElementById('page-' + tabName).classList.remove('hidden');
+            // Снимаем активность со всех кнопок
+            document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+            // Активируем нажатую
+            if (btn) btn.classList.add('active');
+            // Прокручиваем вверх
+            window.scrollTo(0, 0);
         }
 
         loadData();
