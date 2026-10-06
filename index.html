@@ -3,12 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>game menu</title>
+    <title>Cyber RPG</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background: #1a1a2e;
-            color: #eee;
+            font-family: 'Courier New', monospace;
+            background-color: #0a0a1a;
+            background-image: 
+                linear-gradient(rgba(0, 255, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 255, 0.05) 1px, transparent 1px);
+            background-size: 20px 20px;
+            color: #00ffff;
             margin: 0;
             padding: 20px;
             display: flex;
@@ -17,31 +21,61 @@
             min-height: 100vh;
             user-select: none;
         }
-        h1 { color: #e94560; margin: 10px 0; }
+        h1 {
+            font-size: 24px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            text-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff;
+            margin: 10px 0 20px;
+            animation: flicker 3s infinite;
+        }
+        @keyframes flicker {
+            0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { opacity: 1; }
+            20%, 22%, 24%, 55% { opacity: 0.5; }
+        }
         .level-box {
-            background: #16213e;
-            border: 2px solid #0f3460;
-            border-radius: 12px;
+            background: rgba(0, 20, 40, 0.8);
+            border: 1px solid #00ffff;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.3), inset 0 0 15px rgba(0, 255, 255, 0.1);
+            border-radius: 0;
             padding: 15px;
             width: 100%;
             max-width: 350px;
             text-align: center;
             margin-bottom: 20px;
+            position: relative;
         }
-        .level { font-size: 22px; color: #e94560; font-weight: bold; }
+        .level-box::before {
+            content: '';
+            position: absolute;
+            top: -2px; left: -2px; right: -2px; bottom: -2px;
+            border: 1px solid #00ffff;
+            opacity: 0.5;
+            pointer-events: none;
+        }
+        .level {
+            font-size: 20px;
+            color: #00ffff;
+            font-weight: bold;
+            text-shadow: 0 0 8px #00ffff;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
         .xp-bar {
             width: 100%;
-            height: 20px;
-            background: #0f3460;
-            border-radius: 10px;
+            height: 12px;
+            background: #001020;
+            border: 1px solid #004466;
             overflow: hidden;
             margin-top: 10px;
+            position: relative;
         }
         .xp-fill {
             height: 100%;
-            background: linear-gradient(90deg, #e94560, #f39c12);
+            background: linear-gradient(90deg, #0088ff, #00ffff);
             width: 0%;
             transition: width 0.3s;
+            box-shadow: 0 0 10px #00ffff;
         }
         .stats {
             display: grid;
@@ -52,13 +86,33 @@
             margin-bottom: 20px;
         }
         .stat {
-            background: #16213e;
-            border-radius: 10px;
+            background: rgba(0, 20, 40, 0.8);
+            border: 1px solid #004466;
+            box-shadow: 0 0 8px rgba(0, 255, 255, 0.2);
             padding: 10px;
             text-align: center;
+            position: relative;
         }
-        .stat-name { font-size: 12px; color: #888; }
-        .stat-value { font-size: 20px; font-weight: bold; color: #0f9; }
+        .stat::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 8px; height: 8px;
+            border-top: 2px solid #00ffff;
+            border-left: 2px solid #00ffff;
+        }
+        .stat-name {
+            font-size: 11px;
+            color: #0088aa;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .stat-value {
+            font-size: 22px;
+            font-weight: bold;
+            color: #00ffff;
+            text-shadow: 0 0 8px #00ffff;
+        }
         .actions {
             width: 100%;
             max-width: 350px;
@@ -68,37 +122,56 @@
         }
         .action-btn {
             padding: 15px;
-            border: none;
-            border-radius: 10px;
-            font-size: 16px;
+            border: 1px solid #0088ff;
+            background: rgba(0, 30, 60, 0.8);
+            color: #00ffff;
+            font-family: 'Courier New', monospace;
+            font-size: 15px;
             font-weight: bold;
-            color: white;
+            text-transform: uppercase;
+            letter-spacing: 1px;
             cursor: pointer;
-            transition: transform 0.1s;
+            transition: all 0.2s;
             text-align: left;
             display: flex;
             justify-content: space-between;
+            box-shadow: 0 0 8px rgba(0, 136, 255, 0.3);
+            position: relative;
         }
-        .action-btn:active { transform: scale(0.97); }
-        .btn-sport { background: #e94560; }
-        .btn-study { background: #0f3460; }
-        .btn-clean { background: #533483; }
-        .btn-sleep { background: #16a085; }
+        .action-btn:hover {
+            background: rgba(0, 60, 120, 0.9);
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.6);
+            border-color: #00ffff;
+        }
+        .action-btn:active {
+            transform: scale(0.98);
+            box-shadow: 0 0 30px #00ffff;
+        }
+        .btn-sport { border-left: 4px solid #ff0055; }
+        .btn-study { border-left: 4px solid #0088ff; }
+        .btn-clean { border-left: 4px solid #aa00ff; }
+        .btn-sleep { border-left: 4px solid #00ffaa; }
+        
         .reset-btn {
             margin-top: 20px;
-            padding: 10px 20px;
+            padding: 8px 20px;
             background: transparent;
-            border: 1px solid #555;
-            color: #888;
-            border-radius: 8px;
+            border: 1px solid #004466;
+            color: #0088aa;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            text-transform: uppercase;
             cursor: pointer;
-            font-size: 14px;
+        }
+        .reset-btn:hover {
+            border-color: #ff0055;
+            color: #ff0055;
         }
     </style>
 </head>
 <body>
 
-    <h1>⚔️ RPG Жизнь</h1>
+    <h1>⚡ CYBER RPG ⚡</h1>
 
     <div class="level-box">
         <div class="level">Уровень <span id="lvl">1</span></div>
@@ -115,16 +188,16 @@
 
     <div class="actions">
         <button class="action-btn btn-sport" onclick="doAction('sport')">
-            <span>🏋️ Зарядка</span> <span>+10 силы, +20 XP</span>
-            </button>
+            <span>🏋️ Зарядка</span> <span>+10 STR / +20 XP</span>
+        </button>
         <button class="action-btn btn-study" onclick="doAction('study')">
-            <span>📚 Учёба</span> <span>+10 интеллекта, +25 XP</span>
+            <span>📚 Учёба</span> <span>+10 INT / +25 XP</span>
         </button>
         <button class="action-btn btn-clean" onclick="doAction('clean')">
-            <span>🧹 Уборка</span> <span>+10 порядка, +15 XP</span>
+            <span>🧹 Уборка</span> <span>+10 ORD / +15 XP</span>
         </button>
         <button class="action-btn btn-sleep" onclick="doAction('rest')">
-            <span>😴 Отдых</span> <span>+20 энергии</span>
+            <span>😴 Отдых</span> <span>+20 EN</span>
         </button>
     </div>
 
@@ -132,42 +205,26 @@
 
     <script>
         let data = {
-            level: 1,
-            xp: 0,
-            xpMax: 100,
-            str: 0,
-            int: 0,
-            clean: 0,
-            energy: 100
+            level: 1, xp: 0, xpMax: 100,
+            str: 0, int: 0, clean: 0, energy: 100
         };
 
-        // Загрузка: сначала localStorage (для браузера), потом Telegram CloudStorage
         function loadData() {
-            // 1. Пробуем localStorage
             const local = localStorage.getItem('rpgData');
-            if (local) {
-                data = JSON.parse(local);
-            }
+            if (local) data = JSON.parse(local);
 
-            // 2. Если есть Telegram — подключаемся и пробуем облако
             if (window.Telegram && Telegram.WebApp) {
                 Telegram.WebApp.ready();
                 Telegram.WebApp.CloudStorage.getItem('rpgData', (err, value) => {
-                    if (value) {
-                        data = JSON.parse(value);
-                        updateUI();
-                    }
+                    if (value) { data = JSON.parse(value); updateUI(); }
                 });
             }
-
             updateUI();
         }
 
-        // Сохранение: и в localStorage, и в Telegram
         function saveData() {
             const json = JSON.stringify(data);
             localStorage.setItem('rpgData', json);
-
             if (window.Telegram && Telegram.WebApp) {
                 Telegram.WebApp.CloudStorage.setItem('rpgData', json);
             }
@@ -178,15 +235,9 @@
                 if (data.energy < 20) return alert("Мало энергии! Отдохни 😴");
                 data.str += 10; data.xp += 20; data.energy -= 20;
             }
-            if (type === 'study') {
-                data.int += 10; data.xp += 25;
-            }
-            if (type === 'clean') {
-                data.clean += 10; data.xp += 15;
-            }
-            if (type === 'rest') {
-                data.energy = Math.min(100, data.energy + 20);
-            }
+            if (type === 'study') { data.int += 10; data.xp += 25; }
+            if (type === 'clean') { data.clean += 10; data.xp += 15; }
+            if (type === 'rest') { data.energy = Math.min(100, data.energy + 20); }
 
             if (data.xp >= data.xpMax) {
                 data.level++;
@@ -194,7 +245,6 @@
                 data.xpMax = Math.floor(data.xpMax * 1.5);
                 alert("🎉 Новый уровень! Теперь ты " + data.level + " уровня!");
             }
-
             updateUI();
             saveData();
         }
@@ -212,12 +262,10 @@
         }
 
         function resetGame() {
-            if (confirm("Точно сбросить весь прогресс?")) {
+            if (confirm("Сбросить весь прогресс?")) {
                 data = { level: 1, xp: 0, xpMax: 100, str: 0, int: 0, clean: 0, energy: 100 };
                 localStorage.removeItem('rpgData');
-                if (window.Telegram && Telegram.WebApp) {
-                    Telegram.WebApp.CloudStorage.removeItem('rpgData');
-                }
+                if (window.Telegram && Telegram.WebApp) Telegram.WebApp.CloudStorage.removeItem('rpgData');
                 updateUI();
             }
         }
