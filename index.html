@@ -46,7 +46,6 @@
             background-size: 22px 22px;
         }
 
-        /* Мягкое свечение по углам */
         .grid-glow {
             position: fixed;
             top: 0;
@@ -61,13 +60,23 @@
                 radial-gradient(ellipse at 100% 0%, rgba(0, 255, 255, 0.06) 0%, transparent 50%);
         }
 
-        /* ===== КНОПКА МЕНЮ ===== */
-        .menu-btn {
+        /* ===== ВЕРХНЯЯ ПАНЕЛЬ: МЕНЮ + УРОВЕНЬ ===== */
+        .top-bar {
             position: fixed;
             top: 15px;
             left: 15px;
-            width: 44px;
-            height: 44px;
+            right: 15px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            z-index: 100;
+        }
+
+        /* Кнопка меню */
+        .menu-btn {
+            flex-shrink: 0;
+            width: 48px;
+            height: 48px;
             background: rgba(15, 30, 55, 0.9);
             border: 1px solid #1e4a7a;
             cursor: pointer;
@@ -77,7 +86,6 @@
             justify-content: center;
             gap: 5px;
             transition: all 0.2s;
-            z-index: 100;
             border-radius: 4px;
             padding: 0;
         }
@@ -102,6 +110,44 @@
         .menu-btn.open span:nth-child(2) { opacity: 0; }
         .menu-btn.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
+        /* Плашка с уровнем (в стиле кнопки меню) */
+        .level-badge {
+            flex: 1;
+            height: 48px;
+            background: rgba(15, 30, 55, 0.9);
+            border: 1px solid #1e4a7a;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 15px;
+            gap: 8px;
+            transition: all 0.2s;
+            overflow: hidden;
+        }
+        .level-badge:hover {
+            border-color: #00ffff;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.4);
+        }
+        .level-badge .label {
+            font-size: 12px;
+            color: #4a7a9a;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .level-badge .value {
+            font-size: 20px;
+            font-weight: bold;
+            color: #00ffff;
+            text-shadow: 0 0 8px rgba(0, 255, 255, 0.7);
+            letter-spacing: 1px;
+        }
+        .level-badge .xp-mini {
+            font-size: 11px;
+            color: #4a7a9a;
+            margin-left: auto;
+        }
+
         /* ===== ОСНОВНОЙ КОНТЕНТ ===== */
         .page {
             width: 100%;
@@ -110,11 +156,12 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 70px 20px 90px 20px;
+            padding: 90px 20px 90px 20px;
             overflow: hidden;
         }
         .page.hidden { display: none; }
 
+        /* Большой блок уровня (для профиля) */
         .level-box {
             background: rgba(10, 20, 40, 0.8);
             border: 1px solid #00ffff;
@@ -371,20 +418,22 @@
     <div class="grid-bg"></div>
     <div class="grid-glow"></div>
 
-    <!-- КНОПКА МЕНЮ -->
-    <button class="menu-btn" id="menuBtn" onclick="toggleSettings()">
-        <span></span>
-        <span></span>
-        <span></span>
-    </button>
-
-    <!-- ===== ГЛАВНАЯ ===== -->
-    <div class="page" id="page-home">
-        <div class="level-box">
-            <div class="level">Уровень <span id="lvl">1</span></div>
-            <div class="xp-text">Опыт: <span id="xp">0</span> / <span id="xpMax">100</span></div>
-            <div class="xp-bar"><div class="xp-fill" id="xpFill"></div></div>
+    <!-- ===== ВЕРХНЯЯ ПАНЕЛЬ: КНОПКА МЕНЮ + УРОВЕНЬ ===== -->
+    <div class="top-bar">
+        <button class="menu-btn" id="menuBtn" onclick="toggleSettings()">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+        <div class="level-badge">
+            <span class="label">Уровень</span>
+            <span class="value" id="topLvl">1</span>
+            <span class="xp-mini">(<span id="topXp">0</span>/<span id="topXpMax">100</span>)</span>
         </div>
+    </div>
+
+    <!-- ===== ГЛАВНАЯ (пустая) ===== -->
+    <div class="page" id="page-home">
     </div>
 
     <!-- ===== КВЕСТЫ ===== -->
@@ -416,16 +465,16 @@
     <div class="page hidden" id="page-settings">
         <div class="tab-title">СИСТЕМА</div>
         <div class="placeholder-box">
-            <div class="big">⬣</div>
+            <div class="big">⬡</div>
             Настройки:<br>
             • Смена темы<br>
             • Звук<br>
             • Сброс прогресса<br><br>
-            <button class="action-btn" style="margin-top:20px;" onclick="resetGame()">⬣ СБРОСИТЬ ПРОГРЕСС</button>
+            <button class="action-btn" style="margin-top:20px;" onclick="resetGame()">⬡ СБРОСИТЬ ПРОГРЕСС</button>
         </div>
     </div>
 
-    <!-- ===== НИЖНЯЯ НАВИГАЦИЯ (ГЕКСАГОНЫ) ===== -->
+    <!-- ===== НИЖНЯЯ НАВИГАЦИЯ ===== -->
     <div class="bottom-nav">
         <button class="nav-item active" data-tab="home" onclick="switchTab('home', this)">
             <span class="icon">⬢</span>
@@ -436,7 +485,7 @@
             <span>Квесты</span>
         </button>
         <button class="nav-item" data-tab="profile" onclick="switchTab('profile', this)">
-            <span class="icon">⬣</span>
+            <span class="icon">⬡</span>
             <span>Профиль</span>
         </button>
     </div>
@@ -484,10 +533,11 @@
         }
 
         function updateUI() {
-            document.getElementById('lvl').innerText = data.level;
-            document.getElementById('xp').innerText = data.xp;
-            document.getElementById('xpMax').innerText = data.xpMax;
-            document.getElementById('xpFill').style.width = (data.xp / data.xpMax) * 100 + '%';
+            // Данные в верхней панели
+            document.getElementById('topLvl').innerText = data.level;
+            document.getElementById('topXp').innerText = data.xp;
+            document.getElementById('topXpMax').innerText = data.xpMax;
+            // Уровень в профиле
             document.getElementById('profileLvl').innerText = data.level;
         }
 
@@ -525,9 +575,22 @@
             if (tabName !== 'settings') {
                 document.getElementById('menuBtn').classList.remove('open');
             }
+            updateIcons();
+        }
+
+        function updateIcons() {
+            document.querySelectorAll('.nav-item').forEach(item => {
+                const icon = item.querySelector('.icon');
+                if (item.classList.contains('active')) {
+                    icon.innerText = '⬢';
+                } else {
+                    icon.innerText = '⬡';
+                }
+            });
         }
 
         loadData();
+        updateIcons();
     </script>
 
 </body>
