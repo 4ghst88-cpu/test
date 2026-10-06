@@ -79,52 +79,15 @@
         .page {
             width: 100%; height: 100%; display: flex; flex-direction: column;
             align-items: center; justify-content: center;
-            padding: 90px 20px 90px 20px; overflow: hidden;
-            gap: 20px;
+            padding: 80px 15px 80px 15px; overflow: hidden;
         }
         .page.hidden { display: none; }
 
-        /* ===== ПРОФИЛЬ ===== */
-        .profile-card {
-            width: 100%; max-width: 340px;
-            background: rgba(10, 20, 40, 0.8); border: 1px solid #00ffff;
-            border-radius: 0; padding: 30px 20px; text-align: center;
-            backdrop-filter: blur(8px);
-            box-shadow: 0 0 15px rgba(0, 255, 255, 0.25), inset 0 0 15px rgba(0, 255, 255, 0.08);
-            position: relative;
-        }
-        .profile-card::before, .profile-card::after {
-            content: ''; position: absolute; width: 12px; height: 12px;
-            border: 2px solid #00ffff; box-shadow: 0 0 8px #00ffff;
-        }
-        .profile-card::before { top: -2px; left: -2px; border-right: none; border-bottom: none; }
-        .profile-card::after { bottom: -2px; right: -2px; border-left: none; border-top: none; }
-
-        .profile-label {
-            font-size: 12px; color: #4a7a9a; text-transform: uppercase;
-            letter-spacing: 2px; margin-bottom: 12px;
-        }
-        .profile-name-big {
-            font-size: 26px;
-            font-weight: bold;
-            color: #00ffff;
-            letter-spacing: 2px;
-            text-shadow: 0 0 15px #00ffff;
-            margin-bottom: 20px;
-        }
-
-        .profile-level {
-            display: inline-block; padding: 10px 25px;
-            background: rgba(0, 136, 255, 0.2); border: 1px solid #0088ff;
-            border-radius: 0; font-size: 14px; color: #00ffff;
-            letter-spacing: 2px; text-transform: uppercase;
-            box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
-        }
-
-        /* ===== СТАТИСТИКА (квадрат по центру) ===== */
+        /* ===== СТАТИСТИКА (растянутая по высоте) ===== */
         .stats-card {
             width: 100%; max-width: 340px;
-            height: 180px;
+            height: 60vh;
+            max-height: 550px;
             background: rgba(10, 20, 40, 0.8);
             border: 1px solid #00ffff;
             border-radius: 0;
@@ -136,6 +99,7 @@
             backdrop-filter: blur(8px);
             box-shadow: 0 0 15px rgba(0, 255, 255, 0.25), inset 0 0 15px rgba(0, 255, 255, 0.08);
             position: relative;
+            padding: 20px;
         }
         .stats-card::before, .stats-card::after {
             content: ''; position: absolute; width: 12px; height: 12px;
@@ -143,20 +107,20 @@
         }
         .stats-card::before { top: -2px; left: -2px; border-right: none; border-bottom: none; }
         .stats-card::after { bottom: -2px; right: -2px; border-left: none; border-top: none; }
-
+        
         .stats-title {
-            font-size: 18px;
+            font-size: 20px;
             color: #00ffff;
-            letter-spacing: 3px;
+            letter-spacing: 4px;
             text-transform: uppercase;
             text-shadow: 0 0 10px #00ffff;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
         .stats-empty {
-            font-size: 12px;
+            font-size: 13px;
             color: #4a7a9a;
             letter-spacing: 1px;
-            line-height: 1.6;
+            line-height: 1.8;
         }
 
         /* ===== СИСТЕМА ===== */
@@ -277,214 +241,4 @@
     <!-- ===== ВЕРХНЯЯ ПАНЕЛЬ ===== -->
     <div class="top-bar">
         <button class="menu-btn" id="menuBtn" onclick="toggleSettings()">
-            <span></span><span></span><span></span>
-        </button>
-        <div class="badge" id="levelBadge">
-            <span class="label">Уровень</span>
-            <span class="value" id="topLvl">1</span>
-            <span class="xp-mini">(<span id="topXp">0</span>/<span id="topXpMax">100</span>)</span>
-        </div>
-        <div class="badge hidden" id="nameBadge">
-            <span class="label">Имя</span>
-            <span class="value" id="topName">Гость</span>
-        </div>
-    </div>
-
-    <!-- ===== ГЛАВНАЯ ===== -->
-    <div class="page" id="page-home"></div>
-
-    <!-- ===== КВЕСТЫ ===== -->
-    <div class="page hidden" id="page-quests">
-        <div class="tab-title">КВЕСТЫ</div>
-        <div class="placeholder-box">
-            <div class="big">⬡</div>
-            Здесь появятся ежедневные задания:<br>
-            • 20 отжиманий<br>
-            • Прочитать 10 страниц<br>
-            • Убрать комнату<br><br>
-            Награда — опыт
-        </div>
-    </div>
-
-    <!-- ===== ПРОФИЛЬ ===== -->
-    <div class="page hidden" id="page-profile">
-        <!-- Карточка профиля -->
-        <div class="profile-card">
-            <div class="profile-label">Персонаж</div>
-            <div class="profile-name-big" id="profileNameBig">Гость</div>
-            <div class="profile-level">Уровень <span id="profileLvl">1</span></div>
-        </div>
-
-        <!-- Квадрат статистики -->
-        <div class="stats-card">
-            <div class="stats-title">СТАТИСТИКА</div>
-            <div class="stats-empty">
-                Пока пусто...<br>
-                Скоро здесь появятся показатели
-            </div>
-        </div>
-    </div>
-
-    <!-- ===== СИСТЕМА ===== -->
-    <div class="page hidden" id="page-settings">
-        <div class="tab-title">СИСТЕМА</div>
-        <div class="settings-card">
-            <div class="settings-label">Имя персонажа</div>
-            <input 
-                type="text" 
-                class="name-input" 
-                id="nameInput" 
-                placeholder="Введите имя..." 
-                maxlength="20"
-                autocomplete="off"
-            >
-            <button class="save-name-btn" onclick="saveName()">Сохранить имя</button>
-
-            <div class="divider"></div>
-
-            <button class="action-btn btn-danger" onclick="resetGame()">⬡ СБРОСИТЬ ПРОГРЕСС</button>
-        </div>
-    </div>
-
-    <!-- ===== НИЖНЯЯ НАВИГАЦИЯ ===== -->
-    <div class="bottom-nav" id="bottomNav">
-        <button class="nav-item active" data-tab="home" onclick="switchTab('home', this)">
-            <span class="icon">⬢</span><span>Главная</span>
-        </button>
-        <button class="nav-item" data-tab="quests" onclick="switchTab('quests', this)">
-            <span class="icon">⬡</span><span>Квесты</span>
-        </button>
-        <button class="nav-item" data-tab="profile" onclick="switchTab('profile', this)">
-            <span class="icon">⬡</span><span>Профиль</span>
-        </button>
-    </div>
-
-    <script>
-        let data = { level: 1, xp: 0, xpMax: 100, name: 'Гость' };
-        let lastTab = 'home';
-
-        function loadData() {
-            const local = localStorage.getItem('rpgData');
-            if (local) {
-                data = JSON.parse(local);
-            }
-            if (data.name) {
-                document.getElementById('nameInput').value = data.name;
-                document.getElementById('topName').innerText = data.name;
-                document.getElementById('profileNameBig').innerText = data.name;
-            }
-            updateUI();
-        }
-
-        function saveData() {
-            const json = JSON.stringify(data);
-            localStorage.setItem('rpgData', json);
-            if (window.Telegram && Telegram.WebApp) {
-                Telegram.WebApp.CloudStorage.setItem('rpgData', json);
-            }
-        }
-
-        function saveName() {
-            const nameValue = document.getElementById('nameInput').value.trim();
-            if (nameValue === '') {
-                alert('Введите имя!');
-                return;
-            }
-            data.name = nameValue;
-            document.getElementById('topName').innerText = nameValue;
-            document.getElementById('profileNameBig').innerText = nameValue;
-            saveData();
-            alert('Имя сохранено: ' + nameValue);
-        }
-
-        function updateUI() {
-            document.getElementById('topLvl').innerText = data.level;
-            document.getElementById('topXp').innerText = data.xp;
-            document.getElementById('topXpMax').innerText = data.xpMax;
-            document.getElementById('profileLvl').innerText = data.level;
-            if (data.name) {
-                document.getElementById('topName').innerText = data.name;
-                document.getElementById('profileNameBig').innerText = data.name;
-            }
-        }
-
-        function resetGame() {
-            if (confirm("Сбросить весь прогресс?")) {
-                data = { level: 1, xp: 0, xpMax: 100, name: 'Гость' };
-                localStorage.removeItem('rpgData');
-                if (window.Telegram && Telegram.WebApp) Telegram.WebApp.CloudStorage.removeItem('rpgData');
-                document.getElementById('nameInput').value = '';
-                document.getElementById('topName').innerText = 'Гость';
-                document.getElementById('profileNameBig').innerText = 'Гость';
-                updateUI();
-            }
-        }
-
-        function toggleSettings() {
-            const menuBtn = document.getElementById('menuBtn');
-            const settingsPage = document.getElementById('page-settings');
-            const isOpen = !settingsPage.classList.contains('hidden');
-
-            if (isOpen) {
-                menuBtn.classList.remove('open');
-                const targetBtn = document.querySelector('.nav-item[data-tab="' + lastTab + '"]');
-                switchTab(lastTab, targetBtn);
-            } else {
-                const activeNav = document.querySelector('.nav-item.active');
-                lastTab = activeNav ? activeNav.getAttribute('data-tab') : 'home';
-                menuBtn.classList.add('open');
-                switchTab('settings', null);
-            }
-        }
-
-        function switchTab(tabName, btn) {
-            document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
-            document.getElementById('page-' + tabName).classList.remove('hidden');
-            document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
-            if (btn) btn.classList.add('active');
-            if (tabName !== 'settings') {
-                document.getElementById('menuBtn').classList.remove('open');
-            }
-
-            const levelBadge = document.getElementById('levelBadge');
-            const nameBadge = document.getElementById('nameBadge');
-
-            if (tabName === 'home') {
-                levelBadge.classList.remove('hidden');
-            } else {
-                levelBadge.classList.add('hidden');
-            }
-
-            if (tabName === 'profile') {
-                nameBadge.classList.remove('hidden');
-            } else {
-                nameBadge.classList.add('hidden');
-            }
-
-            const bottomNav = document.getElementById('bottomNav');
-            if (tabName === 'settings') {
-                bottomNav.classList.add('hidden');
-            } else {
-                bottomNav.classList.remove('hidden');
-            }
-
-            updateIcons();
-        }
-
-        function updateIcons() {
-            document.querySelectorAll('.nav-item').forEach(item => {
-                const icon = item.querySelector('.icon');
-                if (item.classList.contains('active')) {
-                    icon.innerText = '⬢';
-                } else {
-                    icon.innerText = '⬡';
-                }
-            });
-        }
-
-        loadData();
-        updateIcons();
-    </script>
-
-</body>
-</html>
+            <span></span><span></
