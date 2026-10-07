@@ -116,7 +116,7 @@
         .name-badge-clickable { cursor: pointer; }
         .name-badge-clickable:active { transform: scale(0.97); }
 
-        /* ===== ОСНОВНОЙ КОНТЕНТ ===== */
+        /* ===== ОСНОВНОЙ КОНТЕНТ (ЕДИНАЯ ПРОКРУТКА) ===== */
         .page {
             width: 100%;
             min-height: 100vh;
@@ -129,12 +129,14 @@
         }
         .page.hidden { display: none; }
 
+        /* Для главной, профиля и системы — центрируем */
         #page-home, #page-profile, #page-settings {
             justify-content: center;
             padding-top: 20px;
             padding-bottom: 100px;
         }
 
+        /* ===== ПЛАШКА-СЕКЦИЯ ===== */
         .quests-section {
             width: 100%; max-width: 340px;
             padding: 14px 18px;
@@ -176,6 +178,7 @@
             text-shadow: 0 0 8px rgba(255, 85, 136, 0.7);
         }
 
+        /* ===== СПИСКИ КВЕСТОВ ===== */
         .quests-list {
             width: 100%;
             max-width: 340px;
@@ -344,6 +347,18 @@
             text-shadow: none;
         }
 
+        .name-input {
+            width: 100%; padding: 14px;
+            background: rgba(10, 20, 40, 0.9);
+            border: 1px solid #1e4a7a;
+            color: #00ffff; font-family: 'Courier New', monospace;
+            font-size: 18px; font-weight: bold; text-align: center;
+            letter-spacing: 1px; outline: none; transition: all 0.2s;
+            border-radius: 4px; margin-bottom: 12px;
+        }
+        .name-input:focus { border-color: #00ffff; box-shadow: 0 0 15px rgba(0, 255, 255, 0.5); }
+        .name-input::placeholder { color: #3a5a7a; font-weight: normal; }
+
         .btn {
             padding: 14px;
             background: rgba(15, 30, 55, 0.9);
@@ -354,7 +369,6 @@
             letter-spacing: 2px; text-transform: uppercase;
             cursor: pointer; transition: all 0.2s;
             border-radius: 4px; width: 100%;
-            margin-bottom: 10px;
         }
         .btn:hover {
             border-color: #00ffff;
@@ -377,6 +391,14 @@
             color: #00ffff; margin: 0 0 20px 0; text-align: center;
             text-shadow: 0 0 10px #00ffff;
         }
+        .placeholder-box {
+            width: 100%; max-width: 340px; padding: 30px 20px;
+            background: rgba(15, 30, 55, 0.9);
+            border: 1px dashed #1e4a7a;
+            text-align: center; color: #4a7a9a; font-size: 14px; line-height: 1.7;
+            border-radius: 4px; backdrop-filter: blur(8px);
+        }
+        .placeholder-box .big { font-size: 44px; margin-bottom: 12px; opacity: 0.7; }
 
         .empty-text {
             font-size: 12px;
@@ -419,7 +441,7 @@
     <div class="grid-bg"></div>
     <div class="grid-glow"></div>
 
-    <!-- ===== ГЛАВНАЯ ===== -->
+    <!-- Верхняя панель теперь ВНУТРИ страницы, а не фиксированная -->
     <div class="page" id="page-home">
         <div class="top-bar">
             <button class="panel menu-btn" id="menuBtn" onclick="toggleSettings()">
@@ -435,13 +457,19 @@
                     <div class="xp-fill" id="topXpFill"></div>
                 </div>
             </div>
+            <div class="panel badge hidden name-badge-clickable" id="nameBadge" onclick="goToSettings()">
+                <span class="label">Имя</span>
+                <span class="value" id="topName">Гость</span>
+            </div>
+            <div class="panel badge hidden" id="questsBadge">
+                <span class="value">КВЕСТЫ</span>
+            </div>
         </div>
     </div>
 
-    <!-- ===== КВЕСТЫ ===== -->
     <div class="page hidden" id="page-quests">
         <div class="top-bar">
-            <button class="panel menu-btn" onclick="toggleSettings()">
+            <button class="panel menu-btn" id="menuBtn2" onclick="toggleSettings()">
                 <span></span><span></span><span></span>
             </button>
             <div class="panel badge">
@@ -477,10 +505,9 @@
         <div class="quests-list" id="listFailed"></div>
     </div>
 
-    <!-- ===== ПРОФИЛЬ ===== -->
     <div class="page hidden" id="page-profile">
         <div class="top-bar">
-            <button class="panel menu-btn" onclick="toggleSettings()">
+            <button class="panel menu-btn" id="menuBtn3" onclick="toggleSettings()">
                 <span></span><span></span><span></span>
             </button>
             <div class="panel badge">
@@ -505,10 +532,9 @@
         </div>
     </div>
 
-    <!-- ===== СИСТЕМА ===== -->
     <div class="page hidden" id="page-settings">
         <div class="top-bar">
-            <button class="panel menu-btn open" onclick="toggleSettings()">
+            <button class="panel menu-btn open" id="menuBtn4" onclick="toggleSettings()">
                 <span></span><span></span><span></span>
             </button>
             <div class="panel badge">
@@ -517,13 +543,23 @@
         </div>
 
         <div class="panel card">
-            <div class="card-label">Управление</div>
-            <button class="btn" onclick="changeName()">✎ ИЗМЕНИТЬ ИМЯ</button>
+            <div class="card-label">Имя персонажа</div>
+            <input 
+                type="text" 
+                class="name-input" 
+                id="nameInput" 
+                placeholder="Введите имя..." 
+                maxlength="20"
+                autocomplete="off"
+            >
+            <button class="btn" onclick="saveName()">Сохранить имя</button>
+
+            <div class="divider"></div>
+
             <button class="btn btn-danger" onclick="resetGame()">⬡ СБРОСИТЬ ПРОГРЕСС</button>
         </div>
     </div>
 
-    <!-- ===== НИЖНЯЯ НАВИГАЦИЯ ===== -->
     <div class="bottom-nav" id="bottomNav">
         <button class="nav-item active" data-tab="home" onclick="switchTab('home', this)">
             <span class="icon">⬢</span><span>Главная</span>
@@ -557,6 +593,10 @@
             if (local) data = JSON.parse(local);
             if (!data.questsDone) data.questsDone = [];
             if (!data.questsFailed) data.questsFailed = [];
+            if (data.name) {
+                document.getElementById('nameInput').value = data.name;
+                document.getElementById('topName').innerText = data.name;
+            }
             updateUI();
             updateQuestsView();
         }
@@ -569,23 +609,13 @@
             }
         }
 
-        // ===== ИЗМЕНЕНИЕ ИМЕНИ ЧЕРЕЗ ОКНО ВВОДА =====
-        function changeName() {
-            const newName = prompt('Введите новое имя:', data.name);
-            if (newName === null) return; // отмена
-            const trimmed = newName.trim();
-            if (trimmed === '') {
-                alert('Имя не может быть пустым!');
-                return;
-            }
-            if (trimmed.length > 20) {
-                alert('Имя слишком длинное (макс. 20 символов)');
-                return;
-            }
-            data.name = trimmed;
+        function saveName() {
+            const nameValue = document.getElementById('nameInput').value.trim();
+            if (nameValue === '') { alert('Введите имя!'); return; }
+            data.name = nameValue;
+            document.getElementById('topName').innerText = nameValue;
             saveData();
-            updateUI();
-            alert('Имя изменено на: ' + trimmed);
+            alert('Имя сохранено: ' + nameValue);
         }
 
         function updateUI() {
@@ -598,6 +628,10 @@
             
             const percent = (data.xp / data.xpMax) * 100;
             document.getElementById('topXpFill').style.width = percent + '%';
+            
+            if (data.name) {
+                document.getElementById('topName').innerText = data.name;
+            }
         }
 
         function updateQuestsView() {
@@ -759,6 +793,8 @@
                 data = { level: 1, xp: 0, xpMax: 100, name: 'Гость', questsDone: [], questsFailed: [] };
                 localStorage.removeItem('rpgData');
                 if (window.Telegram && Telegram.WebApp) Telegram.WebApp.CloudStorage.removeItem('rpgData');
+                document.getElementById('nameInput').value = '';
+                document.getElementById('topName').innerText = 'Гость';
                 updateUI();
                 updateQuestsView();
             }
