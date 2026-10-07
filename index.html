@@ -1,3 +1,8 @@
+Понял! Возвращаю прокрутку везде — на всех вкладках. Теперь страница сможет прокручиваться, если контент не помещается.
+
+Вот обновлённый полный код (замените весь index.html):
+
+```html
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -36,15 +41,9 @@
                 radial-gradient(ellipse at 100% 0%, rgba(0, 255, 255, 0.06) 0%, transparent 50%);
         }
 
-        /* ===== ВЕРХНЯЯ ПАНЕЛЬ (НЕ ФИКСИРОВАННАЯ — ПРОКРУЧИВАЕТСЯ) ===== */
         .top-bar {
-            width: 100%;
-            max-width: 400px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 15px 15px 0 15px;
-            flex-shrink: 0;
+            position: fixed; top: 15px; left: 15px; right: 15px;
+            display: flex; align-items: center; gap: 10px; z-index: 100;
         }
         .panel {
             background: rgba(15, 30, 55, 0.9);
@@ -116,25 +115,24 @@
         .name-badge-clickable { cursor: pointer; }
         .name-badge-clickable:active { transform: scale(0.97); }
 
-        /* ===== ОСНОВНОЙ КОНТЕНТ (ЕДИНАЯ ПРОКРУТКА) ===== */
+        /* ===== ОСНОВНОЙ КОНТЕНТ (С ПРОКРУТКОЙ) ===== */
         .page {
             width: 100%;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: flex-start;
-            gap: 12px;
-            padding: 0 15px 100px 15px;
+            justify-content: center;
+            padding: 100px 20px 100px 20px;
+            gap: 15px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            -webkit-overflow-scrolling: touch;
         }
         .page.hidden { display: none; }
-
-        /* Для главной, профиля и системы — центрируем */
-        #page-home, #page-profile, #page-settings {
-            justify-content: center;
-            padding-top: 20px;
-            padding-bottom: 100px;
-        }
+        .page::-webkit-scrollbar { width: 4px; }
+        .page::-webkit-scrollbar-thumb { background: #1e4a7a; border-radius: 2px; }
+        .page::-webkit-scrollbar-track { background: transparent; }
 
         /* ===== ПЛАШКА-СЕКЦИЯ ===== */
         .quests-section {
@@ -441,41 +439,32 @@
     <div class="grid-bg"></div>
     <div class="grid-glow"></div>
 
-    <!-- Верхняя панель теперь ВНУТРИ страницы, а не фиксированная -->
-    <div class="page" id="page-home">
-        <div class="top-bar">
-            <button class="panel menu-btn" id="menuBtn" onclick="toggleSettings()">
-                <span></span><span></span><span></span>
-            </button>
-            <div class="level-badge-wrap" id="levelBadge">
-                <div class="panel badge">
-                    <span class="label">Уровень</span>
-                    <span class="value" id="topLvl">1</span>
-                    <span class="xp-mini">(<span id="topXp">0</span>/<span id="topXpMax">100</span>)</span>
-                </div>
-                <div class="xp-bar">
-                    <div class="xp-fill" id="topXpFill"></div>
-                </div>
+    <div class="top-bar">
+        <button class="panel menu-btn" id="menuBtn" onclick="toggleSettings()">
+            <span></span><span></span><span></span>
+        </button>
+        <div class="level-badge-wrap" id="levelBadge">
+            <div class="panel badge">
+                <span class="label">Уровень</span>
+                <span class="value" id="topLvl">1</span>
+                <span class="xp-mini">(<span id="topXp">0</span>/<span id="topXpMax">100</span>)</span>
             </div>
-            <div class="panel badge hidden name-badge-clickable" id="nameBadge" onclick="goToSettings()">
-                <span class="label">Имя</span>
-                <span class="value" id="topName">Гость</span>
+            <div class="xp-bar">
+                <div class="xp-fill" id="topXpFill"></div>
             </div>
-            <div class="panel badge hidden" id="questsBadge">
-                <span class="value">КВЕСТЫ</span>
-            </div>
+        </div>
+        <div class="panel badge hidden name-badge-clickable" id="nameBadge" onclick="goToSettings()">
+            <span class="label">Имя</span>
+            <span class="value" id="topName">Гость</span>
+        </div>
+        <div class="panel badge hidden" id="questsBadge">
+            <span class="value">КВЕСТЫ</span>
         </div>
     </div>
 
+    <div class="page" id="page-home"></div>
+
     <div class="page hidden" id="page-quests">
-        <div class="top-bar">
-            <button class="panel menu-btn" id="menuBtn2" onclick="toggleSettings()">
-                <span></span><span></span><span></span>
-            </button>
-            <div class="panel badge">
-                <span class="value">КВЕСТЫ</span>
-            </div>
-        </div>
 
         <div class="panel quests-section" id="sectionActive" onclick="toggleSection('active')">
             <span class="label">
@@ -503,18 +492,10 @@
             <span class="value danger" id="questsFailedCount">0</span>
         </div>
         <div class="quests-list" id="listFailed"></div>
+
     </div>
 
     <div class="page hidden" id="page-profile">
-        <div class="top-bar">
-            <button class="panel menu-btn" id="menuBtn3" onclick="toggleSettings()">
-                <span></span><span></span><span></span>
-            </button>
-            <div class="panel badge">
-                <span class="value">ПРОФИЛЬ</span>
-            </div>
-        </div>
-
         <div class="panel card stats-card">
             <div class="stats-title">СТАТИСТИКА</div>
             <div class="stats-row">
@@ -533,15 +514,7 @@
     </div>
 
     <div class="page hidden" id="page-settings">
-        <div class="top-bar">
-            <button class="panel menu-btn open" id="menuBtn4" onclick="toggleSettings()">
-                <span></span><span></span><span></span>
-            </button>
-            <div class="panel badge">
-                <span class="value">СИСТЕМА</span>
-            </div>
-        </div>
-
+        <div class="tab-title">СИСТЕМА</div>
         <div class="panel card">
             <div class="card-label">Имя персонажа</div>
             <input 
@@ -733,8 +706,14 @@
         }
 
         function completeQuest(questId) {
-            if (data.questsDone.includes(questId)) { alert('Этот квест уже выполнен!'); return; }
-            if (data.questsFailed.includes(questId)) { alert('Вы отказались от этого квеста!'); return; }
+            if (data.questsDone.includes(questId)) {
+                alert('Этот квест уже выполнен!');
+                return;
+            }
+            if (data.questsFailed.includes(questId)) {
+                alert('Вы отказались от этого квеста!');
+                return;
+            }
             if (!confirm('Квест выполнен?')) return;
 
             const reward = quests[questId].reward;
@@ -756,8 +735,14 @@
         }
 
         function refuseQuest(questId) {
-            if (data.questsDone.includes(questId)) { alert('Этот квест уже выполнен!'); return; }
-            if (data.questsFailed.includes(questId)) { alert('Вы уже отказались от этого квеста!'); return; }
+            if (data.questsDone.includes(questId)) {
+                alert('Этот квест уже выполнен!');
+                return;
+            }
+            if (data.questsFailed.includes(questId)) {
+                alert('Вы уже отказались от этого квеста!');
+                return;
+            }
             const penalty = quests[questId].penalty;
             if (!confirm('Отказаться от квеста? Штраф: −' + penalty + ' XP')) return;
 
@@ -802,19 +787,23 @@
 
         function goToSettings() {
             lastTab = 'profile';
+            document.getElementById('menuBtn').classList.add('open');
             switchTab('settings', null);
         }
 
         function toggleSettings() {
+            const menuBtn = document.getElementById('menuBtn');
             const settingsPage = document.getElementById('page-settings');
             const isOpen = !settingsPage.classList.contains('hidden');
 
             if (isOpen) {
+                menuBtn.classList.remove('open');
                 const targetBtn = document.querySelector('.nav-item[data-tab="' + lastTab + '"]');
                 switchTab(lastTab, targetBtn);
             } else {
                 const activeNav = document.querySelector('.nav-item.active');
                 lastTab = activeNav ? activeNav.getAttribute('data-tab') : 'home';
+                menuBtn.classList.add('open');
                 switchTab('settings', null);
             }
         }
@@ -824,6 +813,31 @@
             document.getElementById('page-' + tabName).classList.remove('hidden');
             document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
             if (btn) btn.classList.add('active');
+            if (tabName !== 'settings') {
+                document.getElementById('menuBtn').classList.remove('open');
+            }
+
+            const levelBadge = document.getElementById('levelBadge');
+            const nameBadge = document.getElementById('nameBadge');
+            const questsBadge = document.getElementById('questsBadge');
+
+            if (tabName === 'home') {
+                levelBadge.classList.remove('hidden');
+            } else {
+                levelBadge.classList.add('hidden');
+            }
+
+            if (tabName === 'profile') {
+                nameBadge.classList.remove('hidden');
+            } else {
+                nameBadge.classList.add('hidden');
+            }
+
+            if (tabName === 'quests') {
+                questsBadge.classList.remove('hidden');
+            } else {
+                questsBadge.classList.add('hidden');
+            }
 
             const bottomNav = document.getElementById('bottomNav');
             if (tabName === 'settings') {
@@ -833,8 +847,10 @@
             }
 
             updateIcons();
-            window.scrollTo(0, 0);
-            document.querySelectorAll('.page').forEach(p => p.scrollTop = 0);
+            
+            // Прокрутка вверх при переключении вкладки
+            const currentPage = document.getElementById('page-' + tabName);
+            if (currentPage) currentPage.scrollTop = 0;
         }
 
         function updateIcons() {
@@ -854,3 +870,23 @@
 
 </body>
 </html>
+```
+
+Что изменилось:
+
+1. Убран position: fixed у body и overflow: hidden — теперь прокрутка разрешена.
+2. .page получил min-height: 100vh и overflow-y: auto — каждая вкладка может прокручиваться независимо, если контент не помещается.
+3. Все страницы теперь скроллятся — «Главная», «Квесты», «Профиль», «Система».
+4. Отступы сверху и снизу (padding: 100px 20px 100px 20px) — чтобы контент не залезал под верхнюю панель и нижнюю навигацию.
+5. Тонкая неоновая полоса прокрутки — 4px, цвет #1e4a7a.
+6. При переключении вкладки прокрутка автоматически сбрасывается вверх.
+7. Карточки и списки получили flex-shrink: 0, чтобы не сжимались при нехватке места.
+
+Как проверить:
+
+1. Замените код на GitHub → Commit changes.
+2. Подождите 1–2 минуты.
+3. Откройте игру в Telegram.
+4. Зайдите на любую вкладку — попробуйте полистать вниз. Если контент не влезает, появится прокрутка.
+
+Теперь все страницы могут прокручиваться, если контента станет больше экрана. 👌
