@@ -36,7 +36,6 @@
                 radial-gradient(ellipse at 100% 0%, rgba(0, 255, 255, 0.06) 0%, transparent 50%);
         }
 
-        /* ===== ВЕРХНЯЯ ПАНЕЛЬ ===== */
         .top-bar {
             width: 100%;
             max-width: 400px;
@@ -113,7 +112,6 @@
             border-radius: 3px;
         }
 
-        /* ===== ОСНОВНОЙ КОНТЕНТ ===== */
         .page {
             width: 100%;
             min-height: 100vh;
@@ -131,46 +129,6 @@
             padding-top: 20px;
             padding-bottom: 100px;
         }
-
-        /* ===== ГЛАВНАЯ: КНОПКИ ДЕЙСТВИЙ ===== */
-        .home-actions {
-            width: 100%;
-            max-width: 340px;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin-top: 20px;
-        }
-        .home-action-btn {
-            padding: 16px;
-            background: rgba(15, 30, 55, 0.9);
-            border: 1px solid #1e4a7a;
-            color: #00ffff;
-            font-family: 'Courier New', monospace;
-            font-size: 14px;
-            font-weight: bold;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            cursor: pointer;
-            transition: all 0.2s;
-            border-radius: 4px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .home-action-btn:hover {
-            border-color: #00ffff;
-            box-shadow: 0 0 15px rgba(0, 255, 255, 0.4);
-        }
-        .home-action-btn:active { transform: scale(0.97); }
-        .home-action-btn .reward {
-            font-size: 11px;
-            color: #4a7a9a;
-        }
-        .home-action-btn.sport { border-left: 3px solid #e94560; }
-        .home-action-btn.study { border-left: 3px solid #00ffff; }
-        .home-action-btn.clean { border-left: 3px solid #9b59b6; }
-        .home-action-btn.rest { border-left: 3px solid #16a085; }
 
         .quests-section {
             width: 100%; max-width: 340px;
@@ -414,7 +372,7 @@
     <div class="grid-bg"></div>
     <div class="grid-glow"></div>
 
-    <!-- ===== ГЛАВНАЯ ===== -->
+    <!-- ===== ГЛАВНАЯ (только уровень) ===== -->
     <div class="page" id="page-home">
         <div class="top-bar">
             <button class="panel menu-btn" onclick="toggleSettings()">
@@ -430,22 +388,6 @@
                     <div class="xp-fill" id="topXpFill"></div>
                 </div>
             </div>
-        </div>
-
-        <!-- Кнопки действий -->
-        <div class="home-actions">
-            <button class="home-action-btn sport" onclick="doAction('sport')">
-                <span>🏋️ Зарядка</span> <span class="reward">+20 XP</span>
-            </button>
-            <button class="home-action-btn study" onclick="doAction('study')">
-                <span>📚 Учёба</span> <span class="reward">+25 XP</span>
-            </button>
-            <button class="home-action-btn clean" onclick="doAction('clean')">
-                <span>🧹 Уборка</span> <span class="reward">+15 XP</span>
-            </button>
-            <button class="home-action-btn rest" onclick="doAction('rest')">
-                <span>😴 Отдых</span> <span class="reward">+20 EN</span>
-            </button>
         </div>
     </div>
 
@@ -465,7 +407,7 @@
                 <span class="arrow">▼</span>
                 Невыполненные
             </span>
-            <span class="value" id="questsLeft">2</span>
+            <span class="value" id="questsLeft">3</span>
         </div>
         <div class="quests-list" id="listActive"></div>
 
@@ -553,7 +495,6 @@
             xp: 0, 
             xpMax: 100, 
             name: 'Гость',
-            energy: 100,
             questsDone: [],
             questsFailed: []
         };
@@ -561,7 +502,8 @@
 
         const quests = {
             1: { title: '🏋️ 20 отжиманий', desc: 'Сделай 20 отжиманий за сегодня.', reward: 100, penalty: 25 },
-            2: { title: '📚 Прочитать 10 страниц', desc: 'Прочитай 10 страниц любой книги.', reward: 80, penalty: 20 }
+            2: { title: '📚 Прочитать 10 страниц', desc: 'Прочитай 10 страниц любой книги.', reward: 80, penalty: 20 },
+            3: { title: '🧹 Убрать комнату', desc: 'Наведи порядок в своей комнате.', reward: 60, penalty: 15 }
         };
 
         function loadData() {
@@ -569,7 +511,6 @@
             if (local) data = JSON.parse(local);
             if (!data.questsDone) data.questsDone = [];
             if (!data.questsFailed) data.questsFailed = [];
-            if (!data.energy) data.energy = 100;
             updateUI();
             updateQuestsView();
         }
@@ -580,39 +521,6 @@
             if (window.Telegram && Telegram.WebApp) {
                 Telegram.WebApp.CloudStorage.setItem('rpgData', json);
             }
-        }
-
-        // ===== ДЕЙСТВИЯ НА ГЛАВНОЙ =====
-        function doAction(type) {
-            if (type === 'sport') {
-                if (data.energy < 20) { alert('Мало энергии! Отдохни 😴'); return; }
-                data.xp += 20;
-                data.energy -= 20;
-                alert('✅ Зарядка выполнена! +20 XP');
-            }
-            if (type === 'study') {
-                data.xp += 25;
-                alert('✅ Учёба завершена! +25 XP');
-            }
-            if (type === 'clean') {
-                data.xp += 15;
-                alert('✅ Уборка сделана! +15 XP');
-            }
-            if (type === 'rest') {
-                data.energy = Math.min(100, data.energy + 20);
-                alert('😴 Отдых! +20 энергии');
-            }
-
-            // Проверка на новый уровень
-            if (data.xp >= data.xpMax) {
-                data.level++;
-                data.xp -= data.xpMax;
-                data.xpMax = Math.floor(data.xpMax * 1.5);
-                alert('🎉 Новый уровень! Теперь ты ' + data.level + ' уровня!');
-            }
-
-            updateUI();
-            saveData();
         }
 
         function changeName() {
@@ -795,17 +703,12 @@
 
         function resetGame() {
             if (confirm("Сбросить весь прогресс?")) {
-                data = { level: 1, xp: 0, xpMax: 100, name: 'Гость', energy: 100, questsDone: [], questsFailed: [] };
+                data = { level: 1, xp: 0, xpMax: 100, name: 'Гость', questsDone: [], questsFailed: [] };
                 localStorage.removeItem('rpgData');
                 if (window.Telegram && Telegram.WebApp) Telegram.WebApp.CloudStorage.removeItem('rpgData');
                 updateUI();
                 updateQuestsView();
             }
-        }
-
-        function goToSettings() {
-            lastTab = 'profile';
-            switchTab('settings', null);
         }
 
         function toggleSettings() {
